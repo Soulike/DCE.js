@@ -1,0 +1,21 @@
+{
+  "name": "dce.js",
+  "version": "0.1.0",
+  "description": "JavaScript dead code eliminator.",
+  "main": "dist/index.js",
+  "repository": "git@github.com:Soulike/DCE.js.git",
+  "author": "Soulike <soulike@qq.com>",
+  "license": "GPLv3",
+  "private": true,
+  "scripts": {
+    "prebuild": "rm -rf dist/",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prestart": "yarn build",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.6",
+    "typescript": "^4.0.5"
+  }
+}
