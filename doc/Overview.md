@@ -50,8 +50,8 @@ class ScriptFile
 class MethodInfo
 {
     readonly scriptFile: Readonly<ScriptFile> | null,   // 方法所在文件，当描述 global 时值为 null
-    readonly startLineNumber: number | null,            // 方法开始的行号，当描述 global 时值为 null
-    readonly endLineNumber: number | null,              // 方法结束的行号，当描述 global 时值为 null
+    readonly startIndex: number | null,                 // 方法开始的字符位置，当描述 global 时值为 null
+    readonly endIndex: number | null,                   // 方法结束的字符位置，当描述 global 时值为 null
     readonly name: string | null,                       // 方法名，当描述 global 时值为 global，当描述匿名函数时值为 null
 }
 
