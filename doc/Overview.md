@@ -8,8 +8,11 @@
 
 以下的“修改”，均指原地修改。
 
+项目传入参数为一个文件夹，文件夹下为被处理项目的源代码。
+
 ### 1. HTML 文件预处理
 
+- 说明：对文件夹下所有的 HTML 都进行预处理
 - 输入：一个 HTML 文件
 - 输出：
   - 修改后的 HTML 文件
@@ -19,19 +22,17 @@
 
 ### 2. 识别 JavaScript 文件
 
-- 输入：一个 HTML 文件
+- 说明：识别出文件夹下所有的 JavaScript 文件
+- 输入：文件夹
 - 输出：
-  - HTML 引用的外部 JavaScript 文件数组 `ScriptFile[]`，**下标表示被发现的顺序**
-  - （循环，直到没有新的代码/文件被发现）目前发现的所有 JavaScript 文件中动态 `<script>` 插入的 JavaScript 文件
+  - JavaScript 文件数组 `ScriptFile[]`
 - 备注：
   - 目前不考虑 ECMAScript Module
-  - 需要注意循环引用
   - （暂定）文件数据结构
 
 ```ts
 class ScriptFile
 {
-    readonly sequenceNumber: number,                // 被发现的顺序，与自身下标相同
     readonly filePath: string,                      // 文件的相对路径，包含文件名
     readonly MethodsInfo: Readonly<MethodInfo>[],   // 文件中包含的所有方法，供步骤 3 用
 }
@@ -68,7 +69,6 @@ class Method
 - 输出：`Method[]`
 - 备注：
   - 输出数组中所有实例的 `calls` 数组均被填充
-  - 本文件中不存在的函数，逆序查找第一个重名函数
 
 ### 5. 调用图合并
 
@@ -82,7 +82,7 @@ class Method
 - 输入：`Method` 实例，这个实例代表 `global`
 - 输出：`Method[]`，其中包含所有孤立结点
 - 备注：
-  - 孤立结点指没有被任何其他 `Method` 实例的 `calls` 数组包含的函数
+  - 孤立结点指从 `global` 不可达的结点
 
 ### 7. 函数体删除
 
