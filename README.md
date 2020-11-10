@@ -9,6 +9,7 @@ JavaScript 应用程序死代码消除工具。
 - 2020.11.04 确定项目主题[1]
 - 2020.11.06 确定项目静态分析工具为 [ACG.js](https://github.com/snyk-labs/javascript-call-graph) 搭配 [TAJS](https://github.com/cs-au-dk/TAJS)[2]
 - 2020.11.09 完成项目概览（[Overview.md](./doc/Overview.md)）
+- 2020.11.09 对静态分析工具进行评估，放弃 TAJS（对目前 Web 应用支持欠佳）
 
 ## 参考文献
 
