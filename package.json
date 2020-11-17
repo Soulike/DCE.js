@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "@types/fs-extra": "^9.0.4",
+    "@types/jsdom": "^16.2.5",
     "@types/klaw": "^3.0.1",
     "@types/node": "^14.14.6",
     "fs-extra": "^9.0.1",
+    "jsdom": "^16.4.0",
     "klaw": "^3.0.0",
     "typescript": "^4.0.5"
   },

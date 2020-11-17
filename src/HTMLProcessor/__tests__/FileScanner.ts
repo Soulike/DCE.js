@@ -1,7 +1,7 @@
 import {FileScanner} from '../../FileScanner';
 import fse from 'fs-extra';
 import path from 'path';
-import os from 'os';
+import {createTempDirectory} from '../../Function/File';
 
 describe(FileScanner, () =>
 {
@@ -12,11 +12,6 @@ describe(FileScanner, () =>
      * |- testDirectory/
      * |     |- test3.html
      * */
-
-    const createTempDirectory = async () =>
-    {
-        return await fse.mkdtemp(path.join(os.tmpdir(), 'dce.js'));
-    };
 
     const createTempFiles = async (tempDirectoryPath: string): Promise<void> =>
     {
