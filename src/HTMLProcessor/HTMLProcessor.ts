@@ -21,11 +21,6 @@ export class HTMLProcessor
         this.htmlFilePath = htmlFilePath;
     }
 
-    private static async getScriptTags(dom: jsdom.JSDOM)
-    {
-        return dom.window.document.getElementsByTagName('script');
-    }
-
     /**
      * @description replace inline <script> to external js and <script src="xxx">
      * @throws Error
@@ -53,6 +48,11 @@ export class HTMLProcessor
             }
             await this.writeHtml(dom.serialize());
         }
+    }
+
+    private static async getScriptTags(dom: jsdom.JSDOM)
+    {
+        return dom.window.document.getElementsByTagName('script');
     }
 
     /**
