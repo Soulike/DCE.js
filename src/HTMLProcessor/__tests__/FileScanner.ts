@@ -13,21 +13,6 @@ describe(FileScanner, () =>
      * |     |- test3.html
      * */
 
-    const createTempFiles = async (tempDirectoryPath: string): Promise<void> =>
-    {
-        await Promise.all([
-            fse.ensureFile(path.join(tempDirectoryPath, 'test1.html')),
-            fse.ensureFile(path.join(tempDirectoryPath, 'test2.js')),
-            fse.ensureDir(path.join(tempDirectoryPath, 'testDirectory')),
-        ]);
-        await fse.ensureFile(path.join(tempDirectoryPath, 'testDirectory', 'test3.html'));
-    };
-
-    const removeTempFiles = async (tempDirectoryPath: string): Promise<void> =>
-    {
-        await fse.remove(tempDirectoryPath);
-    };
-
     let tempDirectoryPath = '';
 
     beforeAll(async () =>
@@ -64,4 +49,19 @@ describe(FileScanner, () =>
         const fileScanner = new FileScanner(tempDirectoryPath + 'wadawe', 'html');
         await expect(fileScanner.getFilePaths()).rejects.toThrow();
     });
+
+    async function createTempFiles(tempDirectoryPath: string): Promise<void>
+    {
+        await Promise.all([
+            fse.ensureFile(path.join(tempDirectoryPath, 'test1.html')),
+            fse.ensureFile(path.join(tempDirectoryPath, 'test2.js')),
+            fse.ensureDir(path.join(tempDirectoryPath, 'testDirectory')),
+        ]);
+        await fse.ensureFile(path.join(tempDirectoryPath, 'testDirectory', 'test3.html'));
+    }
+
+    async function removeTempFiles(tempDirectoryPath: string): Promise<void>
+    {
+        await fse.remove(tempDirectoryPath);
+    }
 });

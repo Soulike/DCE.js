@@ -14,10 +14,20 @@ describe(HTMLProcessor, () =>
     const innerScriptContent = `console.log(1)`;
     const outerScriptSrc = `./external.js`;
     const divText = 'Hi there!';
+    const html = `
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <div>${divText}</div>
+        <script>${innerScriptContent}</script>
+        <script src="${outerScriptSrc}"></script>
+    </body>
+</html>`;
 
     beforeEach(async () =>
     {
-        const dom = generateOriginalDom();
+        const dom = generateDom(html);
         tempDirectoryPath = await createTempDirectory();
         htmlFilePath = path.join(tempDirectoryPath, 'index.html');
         await fse.outputFile(htmlFilePath, dom.serialize());
@@ -82,18 +92,30 @@ describe(HTMLProcessor, () =>
         expect(divs[0].innerHTML).toBe(divText);
     });
 
-    function generateOriginalDom(): jsdom.JSDOM
+    it('should not modify file when no <script> inside', async function ()
     {
-        return new JSDOM(`
+        const htmlWithoutScript = `
 <!DOCTYPE html>
 <html>
     <head></head>
     <body>
         <div>${divText}</div>
-        <script>${innerScriptContent}</script>
-        <script src="${outerScriptSrc}"></script>
     </body>
-</html>`);
+</html>`;
+
+        const dom = generateDom(htmlWithoutScript);
+        tempDirectoryPath = await createTempDirectory();
+        htmlFilePath = path.join(tempDirectoryPath, 'index.html');
+        await fse.outputFile(htmlFilePath, dom.serialize());
+        newDom = await getProcessedDom();
+        expect(dom.serialize()).toBe(newDom.serialize());
+
+        await fse.remove(tempDirectoryPath);
+    });
+
+    function generateDom(html: string): jsdom.JSDOM
+    {
+        return new JSDOM(html);
     }
 
     async function getProcessedDom()
