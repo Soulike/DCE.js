@@ -29,6 +29,17 @@ describe(HTMLProcessor, () =>
         await fse.remove(tempDirectoryPath);
     });
 
+    it('should throw error when the file is nonexistent', async function ()
+    {
+        const htmlProcessor = new HTMLProcessor(htmlFilePath + 'afafraef');
+        await expect(htmlProcessor.processHtml()).rejects.toThrow(Error);
+    });
+
+    it('should throw error when path is not absolute', async function ()
+    {
+        expect(() => new HTMLProcessor('./index.html')).toThrow(Error);
+    });
+
     it('should clear all content in <script>', async function ()
     {
         const scriptTags = getScriptTags(newDom);
@@ -59,7 +70,7 @@ describe(HTMLProcessor, () =>
         }
 
         const extractedScriptPath = path.join(tempDirectoryPath, extractedSrc);
-        const extractedScriptContent = await fse.readFile(extractedScriptPath);
+        const extractedScriptContent = await fse.readFile(extractedScriptPath, 'utf-8');
         expect(extractedScriptContent).toBe(innerScriptContent);
     });
 
@@ -76,9 +87,7 @@ describe(HTMLProcessor, () =>
         return new JSDOM(`
 <!DOCTYPE html>
 <html>
-    <head>
-
-    </head>
+    <head></head>
     <body>
         <div>${divText}</div>
         <script>${innerScriptContent}</script>
