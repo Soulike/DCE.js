@@ -16,8 +16,8 @@
 
 解析 HTML 文件内容，找到内联的 JavaScript 代码，将内联代码输出为文件，并替换内联 `<script>` 标签为外联文件标签。
 
-外联文件名格式为 `[不含后缀名的原始 HTML 文件名]-[长度为 10 的随机字母字符串].js`
+外联文件名格式为 `[原始 HTML 文件名]-[长度为 10 的随机字母字符串].js`
 
-可使用 [parse5](https://github.com/inikulin/parse5) 实现解析功能。
+可使用 [jsdom](https://github.com/jsdom/jsdom) 实现解析功能。
 
 可使用 [crypto-random-string](https://github.com/sindresorhus/crypto-random-string) 实现随机文件名。
