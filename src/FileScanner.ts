@@ -8,8 +8,8 @@ export class FileScanner
 
     /**
      * @constructor
-     * @param directoryPath 被扫描文件的的目录
-     * @param fileExtension 要扫描文件的后缀名，不包含点。例如 js、html、json
+     * @param directoryPath - The directory path that to be scanned
+     * @param fileExtension - The extension name of wanted files, not including dot, e.g. 'js', 'html', 'json'
      * */
     constructor(directoryPath: string, fileExtension: string)
     {
@@ -23,7 +23,7 @@ export class FileScanner
     }
 
     /**
-     * @return 所有被扫描文件的绝对路径
+     * @return Absolute path of files with certain extension name
      * @throws Promise<Error>
      * */
     public async getFilePaths(): Promise<string[]>

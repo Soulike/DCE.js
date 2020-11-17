@@ -5,7 +5,7 @@ import os from 'os';
 
 describe(FileScanner, () =>
 {
-    /* 创建的临时文件夹文件树
+    /* File tree in temp directory
      * |
      * |- test1.html
      * |- test2.js
@@ -65,7 +65,7 @@ describe(FileScanner, () =>
 
     it('should throw error', async function ()
     {
-        // directoryPath does not exist
+        // 'directoryPath' does not exist
         const fileScanner = new FileScanner(tempDirectoryPath + 'wadawe', 'html');
         await expect(fileScanner.getFilePaths()).rejects.toThrow();
     });
