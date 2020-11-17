@@ -33,7 +33,7 @@
 ```ts
 class ScriptFile
 {
-    filePath: string,         // 文件的相对路径，包含文件名
+    filePath: string,         // 文件的绝对路径，包含文件名
 }
 ```
 
