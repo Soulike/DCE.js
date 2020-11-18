@@ -4,6 +4,30 @@
 
 通过调用 esprima 获取某个文件当中所有的方法定义信息。
 
+## 模块
+
+### EsprimaForFile
+
+包装 esprima，输入文件路径，输出所有 type 为
+
+- FunctionDeclaration
+- CallExpression 且 callee 的 name 为 eval
+- VariableDeclarator 且 init 的 type 为 Identifier
+- AssignmentExpression 且 right 的 type 为 Identifier
+
+以下四种情况一定是方法的定义：
+
+- VariableDeclarator 且 init 的 type 为 NewExpression，callee 是 Function
+- AssignmentExpression 且 right 的 type 为 NewExpression，callee 是 Function
+- VariableDeclarator 且 init 的 type 为 FunctionExpression 或 ArrowFunctionExpression
+- AssignmentExpression 且 right 的 type 为 FunctionExpression 或 ArrowFunctionExpression
+
+### EsprimaForCode
+
+包装 esprima，输入代码文本，其他规则和上面一致。
+
+该类主要用于应对 eval 中的函数体部分。
+
 ## 函数定义形式
 
 ```js
