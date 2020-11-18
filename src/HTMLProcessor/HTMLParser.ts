@@ -3,7 +3,7 @@ import cryptoRandomString from 'crypto-random-string';
 import path from 'path';
 import fse from 'fs-extra';
 
-export class HTMLProcessor
+export class HTMLParser
 {
     private readonly htmlFilePath: string;
 
@@ -32,7 +32,7 @@ export class HTMLProcessor
             throw new Error('File in htmlFilePath does not exist');
         }
         const dom = await jsdom.JSDOM.fromFile(this.htmlFilePath);
-        const scriptTags = await HTMLProcessor.getScriptTags(dom);
+        const scriptTags = await HTMLParser.getScriptTags(dom);
         if (scriptTags.length !== 0)
         {
             for (let i = 0; i < scriptTags.length; i++)

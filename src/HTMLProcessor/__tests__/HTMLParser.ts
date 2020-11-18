@@ -1,10 +1,10 @@
-import {HTMLProcessor} from '../HTMLProcessor';
+import {HTMLParser} from '../HTMLParser';
 import jsdom from 'jsdom';
 import {createTempDirectory} from '../../Function/File';
 import fse from 'fs-extra';
 import path from 'path';
 
-describe(HTMLProcessor, () =>
+describe(HTMLParser, () =>
 {
     const {JSDOM} = jsdom;
     let newDom: jsdom.JSDOM;
@@ -41,13 +41,13 @@ describe(HTMLProcessor, () =>
 
     it('should throw error when the file is nonexistent', async function ()
     {
-        const htmlProcessor = new HTMLProcessor(htmlFilePath + 'afafraef');
+        const htmlProcessor = new HTMLParser(htmlFilePath + 'afafraef');
         await expect(htmlProcessor.processHtml()).rejects.toThrow(Error);
     });
 
     it('should throw error when path is not absolute', async function ()
     {
-        expect(() => new HTMLProcessor('./index.html')).toThrow(Error);
+        expect(() => new HTMLParser('./index.html')).toThrow(Error);
     });
 
     it('should clear all content in <script>', async function ()
@@ -120,7 +120,7 @@ describe(HTMLProcessor, () =>
 
     async function getProcessedDom()
     {
-        const htmlProcessor = new HTMLProcessor(htmlFilePath);
+        const htmlProcessor = new HTMLParser(htmlFilePath);
         await htmlProcessor.processHtml();
         const newHtmlFileContent = await fse.promises.readFile(htmlFilePath);
         return new JSDOM(newHtmlFileContent);
