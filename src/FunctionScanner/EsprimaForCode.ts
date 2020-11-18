@@ -11,6 +11,29 @@ export class EsprimaForCode implements EsprimaWrapper
         this.code = code;
     }
 
+    public async getFunctionRelatedASTNodes()
+    {
+        return new Promise<ESTree.Node[]>((resolve, reject) =>
+        {
+            try
+            {
+                const nodes: ESTree.Node[] = [];
+                esprima.parseScript(this.code, {range: true}, node =>
+                {
+                    if (EsprimaForCode.shouldKeep(node))
+                    {
+                        nodes.push(node);
+                    }
+                });
+                resolve(nodes);
+            }
+            catch (e)
+            {
+                reject(e);
+            }
+        });
+    }
+
     private static shouldKeep(node: ESTree.Node): boolean
     {
         return EsprimaForCode.isFunctionDeclarationNode(node)
@@ -76,28 +99,5 @@ export class EsprimaForCode implements EsprimaWrapper
             }
         }
         return false;
-    }
-
-    public async getFunctionRelatedASTNodes()
-    {
-        return new Promise<ESTree.Node[]>((resolve, reject) =>
-        {
-            try
-            {
-                const nodes: ESTree.Node[] = [];
-                esprima.parseScript(this.code, {range: true}, node =>
-                {
-                    if (EsprimaForCode.shouldKeep(node))
-                    {
-                        nodes.push(node);
-                    }
-                });
-                resolve(nodes);
-            }
-            catch (e)
-            {
-                reject(e);
-            }
-        });
     }
 }
