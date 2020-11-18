@@ -1,4 +1,4 @@
-import {FileScanner} from '../../FileScanner';
+import {FileScanner} from '../FileScanner';
 import fse from 'fs-extra';
 import path from 'path';
 import {createTempDirectory} from '../../Function/File';
