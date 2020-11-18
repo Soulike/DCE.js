@@ -52,7 +52,7 @@ class FunctionInfo
     scriptFile: Readonly<ScriptFile> | null,   // 方法所在文件，当描述 global 时值为 null
     startIndex: number | null,                 // 方法开始的字符位置，当描述 global 时值为 null
     endIndex: number | null,                   // 方法结束的字符位置，当描述 global 时值为 null
-    name: string[] | 'global',                 // 方法名，当描述 global 时值为 'global'，当描述匿名函数时数组为空，当引用被传递时增加
+    name: Set<string> | 'global',              // 方法名，当描述 global 时值为 'global'，当描述匿名函数时集合为空，当引用被传递时增加
 }
 ```
 
@@ -67,7 +67,7 @@ class FunctionInfo
 class StaticFunctionCall
 {
     functionInfo: FunctionInfo, // caller 的信息
-    calleeNames: string[],  // callee 的名字
+    calleeNames: Set<string>,   // callee 的名字
 }
 ```
 

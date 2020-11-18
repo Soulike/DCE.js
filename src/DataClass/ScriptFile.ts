@@ -6,4 +6,9 @@ export class ScriptFile
     {
         this.filePath = filePath;
     }
+
+    public equals(scriptFile: ScriptFile): boolean
+    {
+        return scriptFile.filePath === this.filePath;
+    }
 }
