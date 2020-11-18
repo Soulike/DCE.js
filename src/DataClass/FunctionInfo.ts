@@ -9,9 +9,18 @@ export class FunctionInfo
 
     constructor(scriptFile: Readonly<ScriptFile> | null, startIndex: number | null, endIndex: number | null, name: Set<string> | 'global')
     {
-        this.scriptFile = scriptFile;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
+        if (name === 'global')
+        {
+            this.scriptFile = null;
+            this.startIndex = null;
+            this.endIndex = null;
+        }
+        else
+        {
+            this.scriptFile = scriptFile;
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+        }
         this.name = name;
     }
 
@@ -30,8 +39,7 @@ export class FunctionInfo
         {
             return scriptFile.equals(this.scriptFile)
                 && startIndex === this.startIndex
-                && endIndex === this.endIndex
-                && name === this.name;
+                && endIndex === this.endIndex;
         }
     }
 }
