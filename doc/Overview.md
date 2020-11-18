@@ -37,7 +37,7 @@ class ScriptFile
 }
 ```
 
-### 3. 所有函数识别
+### [3. 所有函数识别](./FunctionScanner.md)
 
 - 说明：识别出文件夹下所有 JavaScript 文件中定义的函数
 - 输入：`ScriptFile[]`
