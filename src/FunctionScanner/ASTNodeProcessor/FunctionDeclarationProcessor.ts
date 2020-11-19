@@ -33,9 +33,9 @@ export class FunctionDeclarationProcessor implements ASTNodeProcessor
         const {body: {range}} = functionDeclaration;
         if (range === undefined)
         {
-            throw new Error('"range" in FunctionDeclaration should not be undefined. Check esprima config and set "range" to true');
+            throw new Error('"range" should not be undefined. Check esprima config and set "range" to true');
         }
-        return range;
+        return [range[0] + 1, range[1] - 1];    // remove { and }
     }
 
     public getFunctionInfo(): FunctionInfo

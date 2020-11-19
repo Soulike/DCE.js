@@ -32,6 +32,12 @@
 
 输入 FunctionDeclaration 类实例，输出 `FunctionInfo`
 
+### VariableDeclaratorProcessor
+
+输入 VariableDeclarator 类实例和已知的所有 `FunctionInfo`，输出 `FunctionInfo` 或者 `null`。
+
+只有发生引用传递或者值传递时才会返回 `null`，因为不会有新的定义产生，新的名字会被直接加入对应的 `FunctionInfo` 对象。
+
 ## 函数定义形式
 
 ```js
@@ -605,3 +611,5 @@ var sum2 = sum;
     ]
 }
 ```
+
+另外还需要考虑对象中的定义和赋值。
