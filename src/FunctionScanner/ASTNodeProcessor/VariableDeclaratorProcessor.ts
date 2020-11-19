@@ -18,6 +18,61 @@ export class VariableDeclaratorProcessor implements ASTNodeProcessor
         this.knownFunctionInfoInScriptFile = knownFunctionInfoInScriptFile;
     }
 
+    public getFunctionInfo(): FunctionInfo | null
+    {
+        if (VariableDeclaratorProcessor.isInitializedByNewExpression(this.variableDeclarator))
+        {
+            const functionInfo = VariableDeclaratorProcessor.getFunctionInfoFromNewExpression(this.variableDeclarator);
+            if (functionInfo === null)
+            {
+                return null;
+            }
+            else
+            {
+                const {bodyStartIndex, bodyEndIndex, name} = functionInfo;
+                return new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name);
+            }
+        }
+        else if (VariableDeclaratorProcessor.isInitializedByFunctionExpression(this.variableDeclarator))
+        {
+            const functionInfo = VariableDeclaratorProcessor.getFunctionInfoFromFunctionExpression(this.variableDeclarator);
+            if (functionInfo === null)
+            {
+                return null;
+            }
+            else
+            {
+                const {bodyStartIndex, bodyEndIndex, name} = functionInfo;
+                return new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name);
+            }
+        }
+        else if (VariableDeclaratorProcessor.isInitializedByArrowFunctionExpression(this.variableDeclarator))
+        {
+            const functionInfo = VariableDeclaratorProcessor.getFunctionInfoFromArrowFunctionExpression(this.variableDeclarator);
+            if (functionInfo === null)
+            {
+                return null;
+            }
+            else
+            {
+                const {bodyStartIndex, bodyEndIndex, name} = functionInfo;
+                return new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name);
+            }
+        }
+        else
+        {
+            const rightName = VariableDeclaratorProcessor.getRightNameFromVariableDeclaratorNode(this.variableDeclarator);
+            if (rightName === null)
+            {
+                return null;
+            }
+            else
+            {
+                return this.getFunctionInfoByName(rightName);
+            }
+        }
+    }
+
     private static isInitializedByNewExpression(variableDeclarator: Readonly<ESTree.VariableDeclarator>): boolean
     {
         if (variableDeclarator.init === undefined || variableDeclarator.init === null)
@@ -172,61 +227,6 @@ export class VariableDeclaratorProcessor implements ASTNodeProcessor
             return null;
         }
         return variableDeclarator.init.name;
-    }
-
-    public getFunctionInfo(): FunctionInfo | null
-    {
-        if (VariableDeclaratorProcessor.isInitializedByNewExpression(this.variableDeclarator))
-        {
-            const functionInfo = VariableDeclaratorProcessor.getFunctionInfoFromNewExpression(this.variableDeclarator);
-            if (functionInfo === null)
-            {
-                return null;
-            }
-            else
-            {
-                const {bodyStartIndex, bodyEndIndex, name} = functionInfo;
-                return new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name);
-            }
-        }
-        else if (VariableDeclaratorProcessor.isInitializedByFunctionExpression(this.variableDeclarator))
-        {
-            const functionInfo = VariableDeclaratorProcessor.getFunctionInfoFromFunctionExpression(this.variableDeclarator);
-            if (functionInfo === null)
-            {
-                return null;
-            }
-            else
-            {
-                const {bodyStartIndex, bodyEndIndex, name} = functionInfo;
-                return new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name);
-            }
-        }
-        else if (VariableDeclaratorProcessor.isInitializedByArrowFunctionExpression(this.variableDeclarator))
-        {
-            const functionInfo = VariableDeclaratorProcessor.getFunctionInfoFromArrowFunctionExpression(this.variableDeclarator);
-            if (functionInfo === null)
-            {
-                return null;
-            }
-            else
-            {
-                const {bodyStartIndex, bodyEndIndex, name} = functionInfo;
-                return new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name);
-            }
-        }
-        else
-        {
-            const rightName = VariableDeclaratorProcessor.getRightNameFromVariableDeclaratorNode(this.variableDeclarator);
-            if (rightName === null)
-            {
-                return null;
-            }
-            else
-            {
-                return this.getFunctionInfoByName(rightName);
-            }
-        }
     }
 
     private getFunctionInfoByName(functionName: string): FunctionInfo | null
