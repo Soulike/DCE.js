@@ -11,19 +11,19 @@ export class ASTNodeFilter
             || ASTNodeFilter.isAssignmentExpression(node);
     }
 
-    private static isFunctionDeclarationNode(node: ESTree.Node): boolean
+    public static isFunctionDeclarationNode(node: ESTree.Node): boolean
     {
         return node.type === esprima.Syntax.FunctionDeclaration;
     }
 
-    private static isEvalCallExpressionNode(node: ESTree.Node): boolean
+    public static isEvalCallExpressionNode(node: ESTree.Node): boolean
     {
         return node.type === esprima.Syntax.CallExpression
             && node.callee.type === esprima.Syntax.Identifier
             && node.callee.name === 'eval';
     }
 
-    private static isVariableDeclarator(node: ESTree.Node): boolean
+    public static isVariableDeclarator(node: ESTree.Node): boolean
     {
         if (node.type === esprima.Syntax.VariableDeclarator
             && node.init !== null && node.init !== undefined)
@@ -47,7 +47,7 @@ export class ASTNodeFilter
         return false;
     }
 
-    private static isAssignmentExpression(node: ESTree.Node): boolean
+    public static isAssignmentExpression(node: ESTree.Node): boolean
     {
         if (node.type === esprima.Syntax.AssignmentExpression)
         {

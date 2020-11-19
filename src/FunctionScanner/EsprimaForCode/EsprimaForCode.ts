@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 import * as esprima from 'esprima';
 import {EsprimaWrapper} from '../Interface/EsprimaWrapper';
-import {ASTNodeFilter} from './ASTNodeFilter';
+import {ASTNodeFilter} from '../ASTNodeFilter';
 
 export class EsprimaForCode implements EsprimaWrapper
 {
