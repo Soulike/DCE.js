@@ -7,7 +7,7 @@ export class FunctionInfo
     public readonly bodyEndIndex: number | null;
     public readonly name: Set<string> | 'global';
 
-    constructor(scriptFile: Readonly<ScriptFile> | null, startIndex: number | null, endIndex: number | null, name: Set<string> | 'global')
+    constructor(scriptFile: Readonly<ScriptFile> | null, bodyStartIndex: number | null, bodyEndIndex: number | null, name: Set<string> | 'global')
     {
         if (name === 'global')
         {
@@ -18,8 +18,8 @@ export class FunctionInfo
         else
         {
             this.scriptFile = scriptFile;
-            this.bodyStartIndex = startIndex;
-            this.bodyEndIndex = endIndex;
+            this.bodyStartIndex = bodyStartIndex;
+            this.bodyEndIndex = bodyEndIndex;
         }
         this.name = name;
     }

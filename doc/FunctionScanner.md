@@ -28,6 +28,10 @@
 
 该类主要用于应对 eval 中的函数体部分。
 
+### FunctionDeclarationProcessor
+
+输入 FunctionDeclaration 类实例，输出 `FunctionInfo`
+
 ## 函数定义形式
 
 ```js
