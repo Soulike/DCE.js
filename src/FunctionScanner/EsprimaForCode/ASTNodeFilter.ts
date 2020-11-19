@@ -1,45 +1,14 @@
 import * as ESTree from 'estree';
 import * as esprima from 'esprima';
-import {EsprimaWrapper} from './Interface/EsprimaWrapper';
 
-export class EsprimaForCode implements EsprimaWrapper
+export class ASTNodeFilter
 {
-    private readonly code: string;
-
-    constructor(code: string)
+    public static shouldKeep(node: ESTree.Node): boolean
     {
-        this.code = code;
-    }
-
-    public async getFunctionRelatedASTNodes()
-    {
-        return new Promise<ESTree.Node[]>((resolve, reject) =>
-        {
-            try
-            {
-                const nodes: ESTree.Node[] = [];
-                esprima.parseScript(this.code, {range: true}, node =>
-                {
-                    if (EsprimaForCode.shouldKeep(node))
-                    {
-                        nodes.push(node);
-                    }
-                });
-                resolve(nodes);
-            }
-            catch (e)
-            {
-                reject(e);
-            }
-        });
-    }
-
-    private static shouldKeep(node: ESTree.Node): boolean
-    {
-        return EsprimaForCode.isFunctionDeclarationNode(node)
-            || EsprimaForCode.isEvalCallExpressionNode(node)
-            || EsprimaForCode.isVariableDeclarator(node)
-            || EsprimaForCode.isAssignmentExpression(node);
+        return ASTNodeFilter.isFunctionDeclarationNode(node)
+            || ASTNodeFilter.isEvalCallExpressionNode(node)
+            || ASTNodeFilter.isVariableDeclarator(node)
+            || ASTNodeFilter.isAssignmentExpression(node);
     }
 
     private static isFunctionDeclarationNode(node: ESTree.Node): boolean
