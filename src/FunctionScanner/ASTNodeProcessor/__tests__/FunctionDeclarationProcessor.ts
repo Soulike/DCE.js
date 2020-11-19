@@ -1,7 +1,7 @@
 import {FunctionDeclarationProcessor} from '../FunctionDeclarationProcessor';
-import {ScriptFile} from '../../DataClass/ScriptFile';
+import {ScriptFile} from '../../../DataClass/ScriptFile';
 import * as ESTree from 'estree';
-import {FunctionInfo} from '../../DataClass/FunctionInfo';
+import {FunctionInfo} from '../../../DataClass/FunctionInfo';
 
 describe(FunctionDeclarationProcessor, () =>
 {

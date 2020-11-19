@@ -1,7 +1,7 @@
-import {ASTNodeProcessor} from './Interface/ASTNodeProcessor';
+import {ASTNodeProcessor} from '../Interface/ASTNodeProcessor';
 import * as ESTree from 'estree';
-import {FunctionInfo} from '../DataClass/FunctionInfo';
-import {ScriptFile} from '../DataClass/ScriptFile';
+import {FunctionInfo} from '../../DataClass/FunctionInfo';
+import {ScriptFile} from '../../DataClass/ScriptFile';
 
 export class FunctionDeclarationProcessor implements ASTNodeProcessor
 {
