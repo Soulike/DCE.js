@@ -31,12 +31,12 @@ describe(FunctionInfo, () =>
         expect(nonGlobal.equals(changeScriptFileNonGlobal)).toBe(false);
     });
 
-    it('non-global to non-global with startIndex changed', function ()
+    it('non-global to non-global with bodyStartIndex changed', function ()
     {
         expect(nonGlobal.equals(changeStartIndexNonGlobal)).toBe(false);
     });
 
-    it('non-global to non-global with endIndex changed', function ()
+    it('non-global to non-global with bodyEndIndex changed', function ()
     {
         expect(nonGlobal.equals(changeEndIndexNonGlobal)).toBe(false);
     });
