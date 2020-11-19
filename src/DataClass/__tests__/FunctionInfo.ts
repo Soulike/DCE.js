@@ -3,9 +3,9 @@ import {ScriptFile} from '../ScriptFile';
 
 describe(FunctionInfo, () =>
 {
-    const global = new FunctionInfo(null, null, null, 'global');
+    const global = new FunctionInfo(null, null, null, FunctionInfo.GLOBAL);
     const nonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 20, new Set());
-    const global2 = new FunctionInfo(null, null, null, 'global');
+    const global2 = new FunctionInfo(null, null, null, FunctionInfo.GLOBAL);
     const nonGlobal2 = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 20, new Set());
     const changeScriptFileNonGlobal = new FunctionInfo(new ScriptFile('/a/c.js'), 0, 20, new Set());
     const changeStartIndexNonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 2, 20, new Set());

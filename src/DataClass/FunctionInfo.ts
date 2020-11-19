@@ -2,14 +2,16 @@ import {ScriptFile} from './ScriptFile';
 
 export class FunctionInfo
 {
+    public static readonly GLOBAL = 'global';
+
     public readonly scriptFile: Readonly<ScriptFile> | null;
     public readonly bodyStartIndex: number | null;
     public readonly bodyEndIndex: number | null;
-    public readonly name: Set<string> | 'global';
+    public readonly name: Set<string> | typeof FunctionInfo.GLOBAL;
 
-    constructor(scriptFile: Readonly<ScriptFile> | null, bodyStartIndex: number | null, bodyEndIndex: number | null, name: Set<string> | 'global')
+    constructor(scriptFile: Readonly<ScriptFile> | null, bodyStartIndex: number | null, bodyEndIndex: number | null, name: Set<string> | typeof FunctionInfo.GLOBAL)
     {
-        if (name === 'global')
+        if (name === FunctionInfo.GLOBAL)
         {
             this.scriptFile = null;
             this.bodyStartIndex = null;
@@ -29,11 +31,11 @@ export class FunctionInfo
         const {scriptFile, bodyStartIndex, bodyEndIndex, name} = functionInfo;
         if (scriptFile === null)
         {
-            return this.name === 'global';
+            return this.name === FunctionInfo.GLOBAL;
         }
         else if (this.scriptFile === null)
         {
-            return name === 'global';
+            return name === FunctionInfo.GLOBAL;
         }
         else
         {
