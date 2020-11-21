@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 import * as esprima from 'esprima';
-import {EsprimaWrapper} from '../Interface/EsprimaWrapper';
-import {ASTNodeFilter} from '../ASTNodeFilter';
+import {EsprimaWrapper} from './Interface/EsprimaWrapper';
+import {ASTNodeFilter} from './ASTNodeFilter';
 
 export class EsprimaForCode implements EsprimaWrapper
 {
@@ -12,7 +12,7 @@ export class EsprimaForCode implements EsprimaWrapper
         this.code = code;
     }
 
-    public async getFunctionRelatedASTNodes()
+    public async getNodes()
     {
         return new Promise<ESTree.Node[]>((resolve, reject) =>
         {

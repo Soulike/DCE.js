@@ -6,9 +6,10 @@
 
 ## 流程
 
-1. 识别结点类型
-2. 如果是 `FunctionDeclaration`，直接处理得到 `FunctionInfo`
-3. 如果是 `VariableDeclarator`，查看 `init` 的类型
+1. 获取所有可能存在函数定义和传递的结点
+2. 识别结点类型
+3. 如果是 `FunctionDeclaration`，直接处理得到 `FunctionInfo`
+4. 如果是 `VariableDeclarator`，查看 `init` 的类型
   - 如果 `init` 是 `FunctionExpression`、`ArrowFunctionExpression` 或者 `NewExpression`，处理得到 `FunctionInfo`
   - 如果 `init` 是 `Identifier`，查找同名函数对象
   - 如果 `init` 是其他类型，忽略
@@ -22,19 +23,20 @@
 
 ## 模块
 
-1. `NodeTypeIdentifier`
-2. `FunctionDeclarationProcessor`
-3. `VariableDeclaratorProcessor`
+1. `EsprimaWrapper`
+2. `NodeTypeIdentifier`
+3. `FunctionDeclarationProcessor`
+4. `VariableDeclaratorProcessor`
    - `FunctionExpressionProcessor`
    - `ArrowFunctionExpressionProcessor`
    - `NewExpressionProcessor`
    - `IdentifierProcessor`
-4. `AssignmentExpressionProcessor`
+5. `AssignmentExpressionProcessor`
    - `FunctionExpressionProcessor`
    - `ArrowFunctionExpressionProcessor`
    - `NewExpressionProcessor`
    - `IdentifierProcessor`
-5. `CallExpressionProcessor`
+6. `CallExpressionProcessor`
    - `EvalProcessor` 
 
 ## 函数定义形式
