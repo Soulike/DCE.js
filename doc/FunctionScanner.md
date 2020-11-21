@@ -24,22 +24,22 @@
 ## 模块
 
 1. `EsprimaWrapper`
-2. `NodeTypeIdentifier`
-3. `FunctionDeclarationProcessor`
-4. `VariableDeclaratorProcessor`
-   - `FunctionExpressionProcessor`
-   - `ArrowFunctionExpressionProcessor`
-   - `NewExpressionProcessor`
-   - `IdentifierProcessor`
-   - `MemberExpressionProcessor`
-5. `AssignmentExpressionProcessor`
-   - `FunctionExpressionProcessor`
-   - `ArrowFunctionExpressionProcessor`
-   - `NewExpressionProcessor`
-   - `IdentifierProcessor`
-   - `MemberExpressionProcessor`
-6. `CallExpressionProcessor`
-   - `EvalProcessor` 
+2. `NodeProcessor`
+   - `FunctionDeclarationProcessor`
+   - `VariableDeclaratorProcessor`
+     - `FunctionExpressionProcessor`
+     - `ArrowFunctionExpressionProcessor`
+     - `NewExpressionProcessor`
+     - `IdentifierProcessor`
+     - `MemberExpressionProcessor`
+   - `AssignmentExpressionProcessor`
+     - `FunctionExpressionProcessor`
+     - `ArrowFunctionExpressionProcessor`
+     - `NewExpressionProcessor`
+     - `IdentifierProcessor`
+     - `MemberExpressionProcessor`
+   - `CallExpressionProcessor`
+     - `EvalProcessor` 
 
 ## 函数定义形式
 
