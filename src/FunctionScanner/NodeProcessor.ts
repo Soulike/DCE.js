@@ -37,10 +37,6 @@ export class NodeProcessor implements INodeProcessor
                 const processor = new AssignmentExpressionProcessor(node, functionInfos);
                 return processor.getPartialFunctionInfo();
             }
-            case esprima.Syntax.CallExpression:
-            {
-                return null;    // TODO: CallExpressionProcessor
-            }
             default:
             {
                 return null;

@@ -17,9 +17,6 @@
   - 如果 `right` 是 `FunctionExpression`、`ArrowFunctionExpression` 或者 `NewExpression`，处理得到 `FunctionInfo`
   - 如果 `right` 是 `Identifier`，查找同名函数对象
   - 如果 `right` 是其他类型，忽略
-5. 如果是 `CallExpression`
-   - 如果 `callee` 符合 `eval` 调用，提取参数代码再次分析
-   - 如果 `callee` 不符合 `eval` 调用，忽略
 
 ## 模块
 
@@ -38,8 +35,6 @@
      - `NewExpressionProcessor`
      - `IdentifierProcessor`
      - `MemberExpressionProcessor`
-   - `CallExpressionProcessor`
-     - `EvalProcessor` 
 
 ## 函数定义形式
 
@@ -150,19 +145,5 @@ interface AssignmentExpression
         '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=';
     left: Expression;
     right: Expression;
-}
-```
-
-
-## 对 `eval` 的处理
-
-遇到 `eval` 应当提取参数字符串当作普通代码处理。
-
-```ts
-interface CallExpression 
-{
-    type: 'CallExpression';
-    callee: Expression;
-    arguments: ArgumentListElement[];
 }
 ```
