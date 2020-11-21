@@ -4,13 +4,13 @@ import {NodeProcessor} from '../Interface/NodeProcessor';
 
 export class IdentifierProcessor implements NodeProcessor
 {
-    private readonly leftIdentifierName: string;
+    private readonly leftIdentifierNames: Set<string>;
     private readonly identifier: Readonly<ESTree.Identifier>;
     private readonly knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>;
 
-    constructor(leftIdentifierName: string, identifier: Readonly<ESTree.Identifier>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(leftIdentifierNames: Set<string>, identifier: Readonly<ESTree.Identifier>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
     {
-        this.leftIdentifierName = leftIdentifierName;
+        this.leftIdentifierNames = leftIdentifierNames;
         this.identifier = identifier;
         this.knownFunctionInfos = knownFunctionInfos;
     }
@@ -28,7 +28,7 @@ export class IdentifierProcessor implements NodeProcessor
             const {name: nameSet} = functionInfo;
             if (nameSet !== FunctionInfo.GLOBAL && nameSet.has(name))
             {
-                nameSet.add(this.leftIdentifierName);
+                this.leftIdentifierNames.forEach(name => nameSet.add(name));
                 break;
             }
         }

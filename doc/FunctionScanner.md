@@ -31,11 +31,13 @@
    - `ArrowFunctionExpressionProcessor`
    - `NewExpressionProcessor`
    - `IdentifierProcessor`
+   - `MemberExpressionProcessor`
 5. `AssignmentExpressionProcessor`
    - `FunctionExpressionProcessor`
    - `ArrowFunctionExpressionProcessor`
    - `NewExpressionProcessor`
    - `IdentifierProcessor`
+   - `MemberExpressionProcessor`
 6. `CallExpressionProcessor`
    - `EvalProcessor` 
 
@@ -120,7 +122,7 @@ interface NewExpression
 
 ```js
 const sum = /*任意函数表达式*/;
-const sum2 = sum;
+const sum2 = sum;   // 需要考虑右侧可能是对象的一部分
 ```
 
 ```ts
@@ -132,11 +134,12 @@ interface VariableDeclarator
 }
 ```
 
-### 变量赋值
+### 赋值
 
 ```js
 const sum = /*任意函数表达式*/;
 sum = /*其他函数表达式或者函数引用*/
+// 需要考虑两边都是对象的一部分的情况
 ```
 
 ```ts
@@ -150,24 +153,6 @@ interface AssignmentExpression
 }
 ```
 
-### 对象键赋值
-
-```js
-const obj = {};
-
-obj.sum = /*函数表达式或者函数引用*/
-```
-
-```ts
-interface AssignmentExpression 
-{
-    type: 'AssignmentExpression';
-    operator: '=' | '*=' | '**=' | '/=' | '%=' | '+=' | '-=' |
-        '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=';
-    left: Expression;
-    right: Expression;
-}
-```
 
 ## 对 `eval` 的处理
 
