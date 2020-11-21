@@ -23,6 +23,16 @@
 1. `EsprimaWrapper`
 2. `NodeProcessor`
    - `FunctionDeclarationProcessor`
+   - `CallStatementProcessor`
+     - `FunctionExpressionProcessor`
+     - `ArrowFunctionExpressionProcessor`
+     - `NewExpressionProcessor`
+   - `ObjectStatementProcessor`
+     - `FunctionExpressionProcessor`
+     - `ArrowFunctionExpressionProcessor`
+     - `NewExpressionProcessor`
+     - `IdentifierProcessor`
+     - `MemberExpressionProcessor`
    - `VariableDeclaratorProcessor`
      - `FunctionExpressionProcessor`
      - `ArrowFunctionExpressionProcessor`
