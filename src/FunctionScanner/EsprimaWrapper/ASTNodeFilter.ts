@@ -4,6 +4,7 @@ import * as esprima from 'esprima';
 export class ASTNodeFilter
 {
     private static readonly SYNTAX_SHOULD_BE_KEEP: Readonly<Array<string>> = Object.freeze([
+        esprima.Syntax.FunctionDeclaration,
         esprima.Syntax.FunctionExpression,
         esprima.Syntax.VariableDeclarator,
         esprima.Syntax.AssignmentExpression,
