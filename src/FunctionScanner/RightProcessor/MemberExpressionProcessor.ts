@@ -23,15 +23,22 @@ export class MemberExpressionProcessor implements NodeProcessor
      * */
     getPartialFunctionInfo(): null
     {
-        const names = getNamesFromChainedMemberExpression(this.memberExpression);
-        // just think that each chain name is a identifier
-        names.forEach(name =>
+        const chainName = getNamesFromChainedMemberExpression(this.memberExpression);
+        if (chainName === null)
         {
-            const identifierProcessor = new IdentifierProcessor(this.leftIdentifierNames,
-                {type: esprima.Syntax.Identifier, name},
-                this.knownFunctionInfos);
-            identifierProcessor.getPartialFunctionInfo();
-        });
-        return null;
+            return null;
+        }
+        else
+        {
+            // just think that each chain name is a identifier
+            chainName.forEach(name =>
+            {
+                const identifierProcessor = new IdentifierProcessor(this.leftIdentifierNames,
+                    {type: esprima.Syntax.Identifier, name},
+                    this.knownFunctionInfos);
+                identifierProcessor.getPartialFunctionInfo();
+            });
+            return null;
+        }
     }
 }

@@ -7,11 +7,15 @@ export function throwRangeIsUndefinedException(): never
 }
 
 /**
- * @description e.g. obj.a['b'].c => [c, b.c, a.b.c, obj.a.b.c], ignore other attribute values like Symbol
+ * @description e.g. obj.a['b'].c => [c, b.c, a.b.c, obj.a.b.c], ignore other attribute values like Symbol and returns null
  * */
-export function getNamesFromChainedMemberExpression(expression: ESTree.MemberExpression): string[]
+export function getNamesFromChainedMemberExpression(expression: ESTree.MemberExpression): string[] | null
 {
     const nameChain = getNamesFromChainedMemberExpressionHelper(expression);
+    if (nameChain === null)
+    {
+        return null;
+    }
     const nameChainSplit = nameChain.split('.');
     const names: string[] = [];
     for (let i = nameChainSplit.length - 1; i >= 0; i--)
@@ -33,7 +37,7 @@ export function getNamesFromChainedMemberExpression(expression: ESTree.MemberExp
 /**
  * @description e.g. obj.a['b'].c[0].d => obj.a.b.c.0.d
  * */
-function getNamesFromChainedMemberExpressionHelper(expression: ESTree.MemberExpression | ESTree.Identifier | ESTree.Literal): string
+function getNamesFromChainedMemberExpressionHelper(expression: ESTree.MemberExpression | ESTree.Identifier | ESTree.Literal): string | null
 {
     if (expression.type === esprima.Syntax.MemberExpression)
     {
@@ -53,20 +57,20 @@ function getNamesFromChainedMemberExpressionHelper(expression: ESTree.MemberExpr
                 || expression.object.type === esprima.Syntax.Literal)
             {
                 const objectChainName = getNamesFromChainedMemberExpressionHelper(expression.object);
-                if (objectChainName.length === 0)
+                if (objectChainName === null)
                 {
-                    return '';
+                    return null;
                 }
                 return `${objectChainName}.${name}`;
             }
             else
             {
-                return '';
+                return null;
             }
         }
         else    // ignore other types
         {
-            return '';
+            return null;
         }
     }
     else if (expression.type === esprima.Syntax.Identifier)
@@ -76,6 +80,6 @@ function getNamesFromChainedMemberExpressionHelper(expression: ESTree.MemberExpr
     }
     else
     {
-        return '';
+        return null;
     }
 }

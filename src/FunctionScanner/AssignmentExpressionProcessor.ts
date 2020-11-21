@@ -86,7 +86,15 @@ export class AssignmentExpressionProcessor implements NodeProcessor
         }
         else if (assignmentExpression.left.type === esprima.Syntax.MemberExpression) // object access
         {
-            return new Set(getNamesFromChainedMemberExpression(assignmentExpression.left));
+            const chainName = getNamesFromChainedMemberExpression(assignmentExpression.left);
+            if (chainName === null)
+            {
+                return null;
+            }
+            else
+            {
+                return new Set(chainName);
+            }
         }
         else
         {
