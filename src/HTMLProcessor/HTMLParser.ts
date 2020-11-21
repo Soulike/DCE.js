@@ -38,8 +38,8 @@ export class HTMLParser
             for (let i = 0; i < scriptTags.length; i++)
             {
                 const tag = scriptTags[i];
-                const {src, innerHTML: scriptContent} = tag;
-                if (src === undefined || src.length === 0)
+                const {src, innerHTML: scriptContent, type} = tag;
+                if ((src === undefined || src.length === 0) && type.toLowerCase() === 'text/javascript')
                 {
                     const scriptFilePath = await this.createScriptFile(scriptContent);
                     tag.innerHTML = '';
