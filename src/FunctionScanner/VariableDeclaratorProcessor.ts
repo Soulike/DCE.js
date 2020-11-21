@@ -41,13 +41,13 @@ export class VariableDeclaratorProcessor implements NodeProcessor
             {
                 const functionExpressionProcessor = new FunctionExpressionProcessor(variableDeclarator.init);
                 const {bodyStartIndex, bodyEndIndex} = functionExpressionProcessor.getPartialFunctionInfo();
-                return {name: new Set(name), bodyStartIndex, bodyEndIndex};
+                return {name: new Set([name]), bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.ArrowFunctionExpression:
             {
                 const arrowFunctionExpressionProcessor = new ArrowFunctionExpressionProcessor(variableDeclarator.init);
                 const {bodyStartIndex, bodyEndIndex} = arrowFunctionExpressionProcessor.getPartialFunctionInfo();
-                return {name: new Set(name), bodyStartIndex, bodyEndIndex};
+                return {name: new Set([name]), bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.NewExpression:
             {
@@ -58,17 +58,17 @@ export class VariableDeclaratorProcessor implements NodeProcessor
                     return null;
                 }
                 const {bodyStartIndex, bodyEndIndex} = partialFunctionInfo;
-                return {name: new Set(name), bodyStartIndex, bodyEndIndex};
+                return {name: new Set([name]), bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.Identifier:
             {
-                const identifierProcessor = new IdentifierProcessor(new Set(name), variableDeclarator.init, this.knownFunctionInfos);
+                const identifierProcessor = new IdentifierProcessor(new Set([name]), variableDeclarator.init, this.knownFunctionInfos);
                 identifierProcessor.getPartialFunctionInfo();
                 return null;
             }
             case esprima.Syntax.MemberExpression:
             {
-                const memberExpressionProcessor = new MemberExpressionProcessor(new Set(name), variableDeclarator.init, this.knownFunctionInfos);
+                const memberExpressionProcessor = new MemberExpressionProcessor(new Set([name]), variableDeclarator.init, this.knownFunctionInfos);
                 memberExpressionProcessor.getPartialFunctionInfo();
                 return null;
             }

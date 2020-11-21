@@ -36,10 +36,20 @@ export class NewExpressionProcessor implements NodeProcessor
                 throwRangeIsUndefinedException();
             }
             // remove quote marks
-            return {
-                bodyStartIndex: range[0] + 1,
-                bodyEndIndex: range[1] - 1,
-            };
+            if (lastArg.type === esprima.Syntax.Literal && typeof lastArg.value === 'string')
+            {
+                return {
+                    bodyStartIndex: range[0] + 1,
+                    bodyEndIndex: range[1] - 1,
+                };
+            }
+            else
+            {
+                return {
+                    bodyStartIndex: range[0],
+                    bodyEndIndex: range[1],
+                };
+            }
         }
     }
 }

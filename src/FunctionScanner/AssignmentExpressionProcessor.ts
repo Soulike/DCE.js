@@ -82,7 +82,7 @@ export class AssignmentExpressionProcessor implements NodeProcessor
         const {assignmentExpression} = this;
         if (assignmentExpression.left.type === esprima.Syntax.Identifier)   // variable
         {
-            return new Set(assignmentExpression.left.name);
+            return new Set([assignmentExpression.left.name]);
         }
         else if (assignmentExpression.left.type === esprima.Syntax.MemberExpression) // object access
         {
