@@ -2,614 +2,180 @@
 
 ## 说明
 
-通过调用 esprima 获取某个文件当中所有的方法定义信息。
+通过调用 esprima 获取某个文件当中所有的函数定义和传递信息。
+
+## 流程
+
+1. 识别结点类型
+2. 如果是 `FunctionDeclaration`，直接处理得到 `FunctionInfo`
+3. 如果是 `VariableDeclarator`，查看 `init` 的类型
+  - 如果 `init` 是 `FunctionExpression`、`ArrowFunctionExpression` 或者 `NewExpression`，处理得到 `FunctionInfo`
+  - 如果 `init` 是 `Identifier`，查找同名函数对象
+  - 如果 `init` 是其他类型，忽略
+4. 如果是 `AssignmentExpression`，查看 `right` 的类型
+  - 如果 `right` 是 `FunctionExpression`、`ArrowFunctionExpression` 或者 `NewExpression`，处理得到 `FunctionInfo`
+  - 如果 `right` 是 `Identifier`，查找同名函数对象
+  - 如果 `right` 是其他类型，忽略
+5. 如果是 `CallExpression`
+   - 如果 `callee` 符合 `eval` 调用，提取参数代码再次分析
+   - 如果 `callee` 不符合 `eval` 调用，忽略
 
 ## 模块
 
-### EsprimaForFile
-
-包装 esprima，输入文件路径，输出所有 type 为
-
-- FunctionDeclaration
-- CallExpression 且 callee 的 name 为 eval
-- VariableDeclarator 且 init 的 type 为 Identifier
-- AssignmentExpression 且 right 的 type 为 Identifier
-
-以下四种情况一定是方法的定义：
-
-- VariableDeclarator 且 init 的 type 为 NewExpression，callee 是 Function
-- AssignmentExpression 且 right 的 type 为 NewExpression，callee 是 Function
-- VariableDeclarator 且 init 的 type 为 FunctionExpression 或 ArrowFunctionExpression
-- AssignmentExpression 且 right 的 type 为 FunctionExpression 或 ArrowFunctionExpression
-
-### EsprimaForCode
-
-包装 esprima，输入代码文本，其他规则和上面一致。
-
-该类主要用于应对 eval 中的函数体部分。
-
-### FunctionDeclarationProcessor
-
-输入 FunctionDeclaration 类实例，输出 `FunctionInfo`
-
-### VariableDeclaratorProcessor
-
-输入 VariableDeclarator 类实例和已知的所有 `FunctionInfo`，输出 `FunctionInfo` 或者 `null`。
-
-只有发生引用传递或者值传递时才会返回 `null`，因为不会有新的定义产生，新的名字会被直接加入对应的 `FunctionInfo` 对象。
+1. `NodeTypeIdentifier`
+2. `FunctionDeclarationProcessor`
+3. `VariableDeclaratorProcessor`
+   - `FunctionExpressionProcessor`
+   - `ArrowFunctionExpressionProcessor`
+   - `NewExpressionProcessor`
+   - `IdentifierProcessor`
+4. `AssignmentExpressionProcessor`
+   - `FunctionExpressionProcessor`
+   - `ArrowFunctionExpressionProcessor`
+   - `NewExpressionProcessor`
+   - `IdentifierProcessor`
+5. `CallExpressionProcessor`
+   - `EvalProcessor` 
 
 ## 函数定义形式
 
+### 函数声明
+
 ```js
 function sum(a, b) {return a + b;}
+```
 
-{
-    "type": "FunctionDeclaration",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            10,
-            13
-        ]
-    },
-    "params": [
-        {
-            "type": "Identifier",
-            "name": "a",
-            "range": [
-                14,
-                15
-            ]
-        },
-        {
-            "type": "Identifier",
-            "name": "b",
-            "range": [
-                17,
-                18
-            ]
-        }
-    ],
-    "body": {
-        "type": "BlockStatement",
-        "body": [
-            {
-                "type": "ReturnStatement",
-                "argument": {
-                    "type": "BinaryExpression",
-                    "operator": "+",
-                    "left": {
-                        "type": "Identifier",
-                        "name": "a",
-                        "range": [
-                            28,
-                            29
-                        ]
-                    },
-                    "right": {
-                        "type": "Identifier",
-                        "name": "b",
-                        "range": [
-                            32,
-                            33
-                        ]
-                    },
-                    "range": [
-                        28,
-                        33
-                    ]
-                },
-                "range": [
-                    21,
-                    34
-                ]
-            }
-        ],
-        "range": [
-            20,
-            35
-        ]
-    },
-    "generator": false,
-    "expression": false,
-    "async": false,
-    "range": [
-        1,
-        35
-    ]
+```ts
+interface FunctionDeclaration 
+{ 
+    type: 'FunctionDeclaration'; 
+    id: Identifier | null; 
+    params: FunctionParameter[]; 
+    body: BlockStatement; 
+    generator: boolean;
+    async: boolean;
+    expression: false; 
 }
 ```
+
+### 函数表达式
 
 ```js
-var sum = function (a, b) {return a + b;}
+function(a, b) {return a + b;}
+```
 
+```ts
+interface FunctionExpression 
 {
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            5,
-            8
-        ]
-    },
-    "init": {
-        "type": "FunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    21,
-                    22
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    24,
-                    25
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                35,
-                                36
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                39,
-                                40
-                            ]
-                        },
-                        "range": [
-                            35,
-                            40
-                        ]
-                    },
-                    "range": [
-                        28,
-                        41
-                    ]
-                }
-            ],
-            "range": [
-                27,
-                42
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            11,
-            42
-        ]
-    },
-    "range": [
-        5,
-        42
-    ]
+    type: 'FunctionExpression'; 
+    id: Identifier | null; 
+    params: FunctionParameter[]; 
+    body: BlockStatement; 
+    generator: boolean;
+    async: boolean;
+    expression: boolean; 
 }
 ```
+
+### 箭头函数表达式
 
 ```js
-sum = function (a, b) {return a + b;}
+(a, b) => a + b;
+(a, b) => {return a + b;};
+```
 
-{
-    "type": "AssignmentExpression",
-    "operator": "=",
-    "left": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            1,
-            4
-        ]
-    },
-    "right": {
-        "type": "FunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    17,
-                    18
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    20,
-                    21
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                31,
-                                32
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                35,
-                                36
-                            ]
-                        },
-                        "range": [
-                            31,
-                            36
-                        ]
-                    },
-                    "range": [
-                        24,
-                        37
-                    ]
-                }
-            ],
-            "range": [
-                23,
-                38
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            7,
-            38
-        ]
-    },
-    "range": [
-        1,
-        38
-    ]
+```ts
+interface ArrowFunctionExpression 
+{ 
+    type: 'ArrowFunctionExpression'; 
+    id: Identifier | null;
+    params: FunctionParameter[];
+    body: BlockStatement | Expression; 
+    generator: boolean;
+    async: boolean;
+    expression: false; 
 }
 ```
+
+### 构造函数形式
 
 ```js
-var sum = (a, b) => {return a + b;}
+new Function('a', 'b', 'return a+b');
+```
 
+```ts
+interface NewExpression 
 {
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            5,
-            8
-        ]
-    },
-    "init": {
-        "type": "ArrowFunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    12,
-                    13
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    15,
-                    16
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                29,
-                                30
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                33,
-                                34
-                            ]
-                        },
-                        "range": [
-                            29,
-                            34
-                        ]
-                    },
-                    "range": [
-                        22,
-                        35
-                    ]
-                }
-            ],
-            "range": [
-                21,
-                36
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            11,
-            36
-        ]
-    },
-    "range": [
-        5,
-        36
-    ]
+    type: 'NewExpression';
+    callee: Expression;
+    arguments: ArgumentListElement[];
 }
 ```
+
+## 函数引用传递形式
+
+### 变量初始化
 
 ```js
-eval(`function sum(a, b) {return a+b;}`);
+const sum = /*任意函数表达式*/;
+const sum2 = sum;
+```
 
+```ts
+interface VariableDeclarator 
 {
-    "type": "CallExpression",
-    "callee": {
-        "type": "Identifier",
-        "name": "eval",
-        "range": [
-            1,
-            5
-        ]
-    },
-    "arguments": [
-        {
-            "type": "TemplateLiteral",
-            "quasis": [
-                {
-                    "type": "TemplateElement",
-                    "value": {
-                        "raw": "function sum(a, b) {return a+b;}",
-                        "cooked": "function sum(a, b) {return a+b;}"
-                    },
-                    "tail": true,
-                    "range": [
-                        6,
-                        40
-                    ]
-                }
-            ],
-            "expressions": [],
-            "range": [
-                6,
-                40
-            ]
-        }
-    ],
-    "range": [
-        1,
-        41
-    ]
+    type: 'VariableDeclarator';
+    id: Identifier | BindingPattern; 
+    init: Expression | null;
 }
 ```
+
+### 变量赋值
 
 ```js
-const sum = new Function('a', 'b', 'return a + b');
+const sum = /*任意函数表达式*/;
+sum = /*其他函数表达式或者函数引用*/
+```
 
+```ts
+interface AssignmentExpression 
 {
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            7,
-            10
-        ]
-    },
-    "init": {
-        "type": "NewExpression",
-        "callee": {
-            "type": "Identifier",
-            "name": "Function",
-            "range": [
-                17,
-                25
-            ]
-        },
-        "arguments": [
-            {
-                "type": "Literal",
-                "value": "a",
-                "raw": "'a'",
-                "range": [
-                    26,
-                    29
-                ]
-            },
-            {
-                "type": "Literal",
-                "value": "b",
-                "raw": "'b'",
-                "range": [
-                    31,
-                    34
-                ]
-            },
-            {
-                "type": "Literal",
-                "value": "return a + b",
-                "raw": "'return a + b'",
-                "range": [
-                    36,
-                    50
-                ]
-            }
-        ],
-        "range": [
-            13,
-            51
-        ]
-    },
-    "range": [
-        7,
-        51
-    ]
+    type: 'AssignmentExpression';
+    operator: '=' | '*=' | '**=' | '/=' | '%=' | '+=' | '-=' |
+        '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=';
+    left: Expression;
+    right: Expression;
 }
 ```
 
-此外，需要考虑函数引用的传递：
+### 对象键赋值
 
 ```js
-var sum = function (a, b) {return a + b;}
-var sum2 = sum;
+const obj = {};
 
+obj.sum = /*函数表达式或者函数引用*/
+```
+
+```ts
+interface AssignmentExpression 
 {
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            5,
-            8
-        ]
-    },
-    "init": {
-        "type": "FunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    21,
-                    22
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    24,
-                    25
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                35,
-                                36
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                39,
-                                40
-                            ]
-                        },
-                        "range": [
-                            35,
-                            40
-                        ]
-                    },
-                    "range": [
-                        28,
-                        41
-                    ]
-                }
-            ],
-            "range": [
-                27,
-                42
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            11,
-            42
-        ]
-    },
-    "range": [
-        5,
-        42
-    ]
-}
-{
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum2",
-        "range": [
-            47,
-            51
-        ]
-    },
-    "init": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            54,
-            57
-        ]
-    },
-    "range": [
-        47,
-        57
-    ]
+    type: 'AssignmentExpression';
+    operator: '=' | '*=' | '**=' | '/=' | '%=' | '+=' | '-=' |
+        '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=';
+    left: Expression;
+    right: Expression;
 }
 ```
 
-另外还需要考虑对象中的定义和赋值。
+## 对 `eval` 的处理
+
+遇到 `eval` 应当提取参数字符串当作普通代码处理。
+
+```ts
+interface CallExpression 
+{
+    type: 'CallExpression';
+    callee: Expression;
+    arguments: ArgumentListElement[];
+}
+```
