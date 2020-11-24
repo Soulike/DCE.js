@@ -1,7 +1,7 @@
-import {NodeProcessor} from '../Interface/NodeProcessor';
+import {NodeProcessor} from '../../Interface/NodeProcessor';
 import * as ESTree from 'estree';
-import {FunctionInfo} from '../../DataClass/FunctionInfo';
-import {getNamesFromChainedMemberExpression} from '../Function';
+import {FunctionInfo} from '../../../DataClass/FunctionInfo';
+import {getNamesFromChainedMemberExpression} from '../../Function';
 import {IdentifierProcessor} from './IdentifierProcessor';
 import * as esprima from 'esprima';
 

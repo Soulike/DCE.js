@@ -1,21 +1,22 @@
-import {NodeProcessor} from './Interface/NodeProcessor';
+import {NodeProcessor} from '../Interface/NodeProcessor';
 import * as ESTree from 'estree';
-import {FunctionInfo} from '../DataClass/FunctionInfo';
+import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import * as esprima from 'esprima';
 import {FunctionExpressionProcessor} from './RightProcessor/FunctionExpressionProcessor';
 import {ArrowFunctionExpressionProcessor} from './RightProcessor/ArrowFunctionExpressionProcessor';
 import {NewExpressionProcessor} from './RightProcessor/NewExpressionProcessor';
 import {IdentifierProcessor} from './RightProcessor/IdentifierProcessor';
 import {MemberExpressionProcessor} from './RightProcessor/MemberExpressionProcessor';
+import {getNamesFromChainedMemberExpression} from '../Function';
 
-export class VariableDeclaratorProcessor implements NodeProcessor
+export class AssignmentExpressionProcessor implements NodeProcessor
 {
-    private readonly variableDeclarator: Readonly<ESTree.VariableDeclarator>;
+    private readonly assignmentExpression: Readonly<ESTree.AssignmentExpression>;
     private readonly knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>;
 
-    constructor(variableDeclarator: Readonly<ESTree.VariableDeclarator>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(assignmentExpression: Readonly<ESTree.AssignmentExpression>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
     {
-        this.variableDeclarator = variableDeclarator;
+        this.assignmentExpression = assignmentExpression;
         this.knownFunctionInfos = knownFunctionInfos;
     }
 
@@ -24,51 +25,47 @@ export class VariableDeclaratorProcessor implements NodeProcessor
      * */
     public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
     {
-        const {variableDeclarator} = this;
-        if (variableDeclarator.init === undefined || variableDeclarator.init === null)
-        {
-            return null;
-        }
-        const name = this.getVariableName();
-        if (name === null)
+        const {assignmentExpression} = this;
+        const names = this.getLeftNames();
+        if (names === null)
         {
             return null;
         }
 
-        switch (variableDeclarator.init.type)
+        switch (assignmentExpression.right.type)
         {
             case esprima.Syntax.FunctionExpression:
             {
-                const functionExpressionProcessor = new FunctionExpressionProcessor(variableDeclarator.init);
+                const functionExpressionProcessor = new FunctionExpressionProcessor(assignmentExpression.right);
                 const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = functionExpressionProcessor.getPartialFunctionInfo();
-                return {name: new Set([name]), startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+                return {name: names, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.ArrowFunctionExpression:
             {
-                const arrowFunctionExpressionProcessor = new ArrowFunctionExpressionProcessor(variableDeclarator.init);
+                const arrowFunctionExpressionProcessor = new ArrowFunctionExpressionProcessor(assignmentExpression.right);
                 const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = arrowFunctionExpressionProcessor.getPartialFunctionInfo();
-                return {name: new Set([name]), startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+                return {name: names, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.NewExpression:
             {
-                const newExpressionProcessor = new NewExpressionProcessor(variableDeclarator.init);
+                const newExpressionProcessor = new NewExpressionProcessor(assignmentExpression.right);
                 const partialFunctionInfo = newExpressionProcessor.getPartialFunctionInfo();
                 if (partialFunctionInfo === null)
                 {
                     return null;
                 }
                 const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = partialFunctionInfo;
-                return {name: new Set([name]), startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+                return {name: names, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.Identifier:
             {
-                const identifierProcessor = new IdentifierProcessor(new Set([name]), variableDeclarator.init, this.knownFunctionInfos);
+                const identifierProcessor = new IdentifierProcessor(new Set(names), assignmentExpression.right, this.knownFunctionInfos);
                 identifierProcessor.getPartialFunctionInfo();
                 return null;
             }
             case esprima.Syntax.MemberExpression:
             {
-                const memberExpressionProcessor = new MemberExpressionProcessor(new Set([name]), variableDeclarator.init, this.knownFunctionInfos);
+                const memberExpressionProcessor = new MemberExpressionProcessor(new Set(names), assignmentExpression.right, this.knownFunctionInfos);
                 memberExpressionProcessor.getPartialFunctionInfo();
                 return null;
             }
@@ -80,16 +77,28 @@ export class VariableDeclaratorProcessor implements NodeProcessor
 
     }
 
-    private getVariableName(): string | null
+    private getLeftNames(): Set<string> | null
     {
-        const {variableDeclarator} = this;
-        if (variableDeclarator.id.type !== esprima.Syntax.Identifier)
+        const {assignmentExpression} = this;
+        if (assignmentExpression.left.type === esprima.Syntax.Identifier)   // variable
         {
-            return null;
+            return new Set([assignmentExpression.left.name]);
+        }
+        else if (assignmentExpression.left.type === esprima.Syntax.MemberExpression) // object access
+        {
+            const chainName = getNamesFromChainedMemberExpression(assignmentExpression.left);
+            if (chainName === null)
+            {
+                return null;
+            }
+            else
+            {
+                return new Set(chainName);
+            }
         }
         else
         {
-            return variableDeclarator.id.name;
+            return null;
         }
     }
 }
