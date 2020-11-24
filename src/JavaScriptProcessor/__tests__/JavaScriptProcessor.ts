@@ -12,7 +12,6 @@ describe(JavaScriptProcessor, () =>
     beforeEach(async () =>
     {
         tempDirectoryPath = await createTempDirectory();
-        tempFilePath = await createTempFile(tempDirectoryPath);
     });
 
     afterEach(async () =>
@@ -22,18 +21,33 @@ describe(JavaScriptProcessor, () =>
 
     it('should process JavaScript file', async function ()
     {
+        const code =
+            `const sum1 = (a,b) => a+b;const sum2 = new Function('a,b', 'return a+b');eval("const sum3 = Function('a', 'b', 'return a+b')");`;
+        tempFilePath = await createTempFile(tempDirectoryPath, code);
+
         const javaScriptProcessor = new JavaScriptProcessor(new ScriptFile(tempFilePath));
         await javaScriptProcessor.doProcess();
         await expect(readTempFile(tempFilePath)).resolves.toBe(
             `const sum1 = (a,b) => a+b;const sum2 = function(a,b){return a+b};const sum3 = function(a,b){return a+b};`);
     });
 
-    async function createTempFile(tempDirectoryPath: string): Promise<string>
+    it('should not modify eval or Function with non-literal parameters', async function ()
+    {
+        const code =
+            `const sum1 = eval('(a,b) '+'=> a+b');const sum2 = new Function('a,b', 'return' + 'a+b');eval("const sum3 = Function('a', 'b'+1, 'return a+b1')");`;
+        tempFilePath = await createTempFile(tempDirectoryPath, code);
+
+        const javaScriptProcessor = new JavaScriptProcessor(new ScriptFile(tempFilePath));
+        await javaScriptProcessor.doProcess();
+        await expect(readTempFile(tempFilePath)).resolves.toBe(
+            `const sum1 = eval('(a,b) '+'=> a+b');const sum2 = new Function('a,b', 'return' + 'a+b');const sum3 = Function('a', 'b'+1, 'return a+b1');`,
+        );
+    });
+
+    async function createTempFile(tempDirectoryPath: string, content: string): Promise<string>
     {
         const tempFilePath = path.join(tempDirectoryPath, 'test.js');
-        const code =
-            `const sum1 = (a,b) => a+b;const sum2 = new Function('a,b', 'return a+b');eval("const sum3 = Function('a', 'b', 'return a+b')");`;
-        await fse.outputFile(tempFilePath, code);
+        await fse.outputFile(tempFilePath, content);
         return tempFilePath;
     }
 
