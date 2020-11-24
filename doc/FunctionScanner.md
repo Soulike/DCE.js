@@ -23,7 +23,7 @@
 1. `EsprimaWrapper`
 2. `NodeProcessor`
    - `FunctionDeclarationProcessor`
-   - `CallStatementProcessor`
+   - `CallExpressionProcessor`
      - `FunctionExpressionProcessor`
      - `ArrowFunctionExpressionProcessor`
      - `NewExpressionProcessor`
@@ -155,5 +155,23 @@ interface AssignmentExpression
         '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=';
     left: Expression;
     right: Expression;
+}
+```
+
+### 传参
+
+```js
+sum((a, b) =>
+{
+    return a + b;
+})
+``` 
+
+```ts
+interface CallExpression
+{
+    type: 'CallExpression';
+    callee: Expression;
+    arguments: ArgumentListElement[];
 }
 ```
