@@ -5,6 +5,7 @@ import * as esprima from 'esprima';
 import {FunctionDeclarationProcessor} from './FunctionDeclarationProcessor';
 import {VariableDeclaratorProcessor} from './VariableDeclaratorProcessor';
 import {AssignmentExpressionProcessor} from './AssignmentExpressionProcessor';
+import {CallExpressionProcessor} from './CallExpressionProcessor';
 
 export class NodeProcessor implements INodeProcessor
 {
@@ -17,7 +18,10 @@ export class NodeProcessor implements INodeProcessor
         this.functionInfos = [];
     }
 
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
+    /**
+     * @description if need to add new processors, add them here.
+     * */
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] | null
     {
         const {node, functionInfos} = this;
         switch (node.type)
@@ -35,6 +39,11 @@ export class NodeProcessor implements INodeProcessor
             case esprima.Syntax.AssignmentExpression:
             {
                 const processor = new AssignmentExpressionProcessor(node, functionInfos);
+                return processor.getPartialFunctionInfo();
+            }
+            case esprima.Syntax.CallExpression:
+            {
+                const processor = new CallExpressionProcessor(node);
                 return processor.getPartialFunctionInfo();
             }
             default:

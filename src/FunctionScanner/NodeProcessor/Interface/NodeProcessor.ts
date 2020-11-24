@@ -1,6 +1,8 @@
 import {FunctionInfo} from '../../../DataClass/FunctionInfo';
 
+type PartialFunctionInfo = Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'>;
+
 export interface NodeProcessor
 {
-    getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'> | null;
+    getPartialFunctionInfo(): PartialFunctionInfo | PartialFunctionInfo[] | null;
 }
