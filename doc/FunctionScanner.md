@@ -8,15 +8,7 @@
 
 1. 获取所有可能存在函数定义和传递的结点
 2. 识别结点类型
-3. 如果是 `FunctionDeclaration`，直接处理得到 `FunctionInfo`
-4. 如果是 `VariableDeclarator`，查看 `init` 的类型
-  - 如果 `init` 是 `FunctionExpression`、`ArrowFunctionExpression` 或者 `NewExpression`，处理得到 `FunctionInfo`
-  - 如果 `init` 是 `Identifier`，查找同名函数对象
-  - 如果 `init` 是其他类型，忽略
-4. 如果是 `AssignmentExpression`，查看 `right` 的类型
-  - 如果 `right` 是 `FunctionExpression`、`ArrowFunctionExpression` 或者 `NewExpression`，处理得到 `FunctionInfo`
-  - 如果 `right` 是 `Identifier`，查找同名函数对象
-  - 如果 `right` 是其他类型，忽略
+3. 做适当处理
 
 ## 模块
 
@@ -27,24 +19,20 @@
      - `FunctionExpressionProcessor`
      - `ArrowFunctionExpressionProcessor`
      - `NewExpressionProcessor`
-   - `ObjectStatementProcessor`
-     - `FunctionExpressionProcessor`
-     - `ArrowFunctionExpressionProcessor`
-     - `NewExpressionProcessor`
-     - `IdentifierProcessor`
-     - `MemberExpressionProcessor`
    - `VariableDeclaratorProcessor`
      - `FunctionExpressionProcessor`
      - `ArrowFunctionExpressionProcessor`
      - `NewExpressionProcessor`
      - `IdentifierProcessor`
      - `MemberExpressionProcessor`
+     - `ObjectExpressionProcessor`
    - `AssignmentExpressionProcessor`
      - `FunctionExpressionProcessor`
      - `ArrowFunctionExpressionProcessor`
      - `NewExpressionProcessor`
      - `IdentifierProcessor`
      - `MemberExpressionProcessor`
+     - `ObjectExpressionProcessor`
 
 ## 函数定义形式
 
@@ -155,6 +143,22 @@ interface AssignmentExpression
         '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|=';
     left: Expression;
     right: Expression;
+}
+```
+
+### 对象内赋值
+
+```js
+const obj = {
+    sum: (a, b) => a + b,
+}
+```
+
+```ts
+interface ObjectExpression 
+{ 
+    type: 'ObjectExpression'; 
+    properties: Property[];
 }
 ```
 
