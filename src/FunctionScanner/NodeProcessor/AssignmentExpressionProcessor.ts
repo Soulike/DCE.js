@@ -13,9 +13,9 @@ import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProces
 export class AssignmentExpressionProcessor implements NodeProcessor
 {
     private readonly assignmentExpression: Readonly<ESTree.AssignmentExpression>;
-    private readonly knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>;
 
-    constructor(assignmentExpression: Readonly<ESTree.AssignmentExpression>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(assignmentExpression: Readonly<ESTree.AssignmentExpression>, knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>)
     {
         this.assignmentExpression = assignmentExpression;
         this.knownFunctionInfos = knownFunctionInfos;

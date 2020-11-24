@@ -9,9 +9,9 @@ export class MemberExpressionProcessor implements NodeProcessor
 {
     private readonly leftIdentifierNames: Set<string>;
     private readonly memberExpression: Readonly<ESTree.MemberExpression>;
-    private readonly knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>;
 
-    constructor(leftIdentifierNames: Set<string>, memberExpression: Readonly<ESTree.MemberExpression>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(leftIdentifierNames: Set<string>, memberExpression: Readonly<ESTree.MemberExpression>, knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>)
     {
         this.leftIdentifierNames = leftIdentifierNames;
         this.memberExpression = memberExpression;

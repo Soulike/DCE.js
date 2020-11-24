@@ -12,9 +12,9 @@ import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProces
 export class VariableDeclaratorProcessor implements NodeProcessor
 {
     private readonly variableDeclarator: Readonly<ESTree.VariableDeclarator>;
-    private readonly knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>;
 
-    constructor(variableDeclarator: Readonly<ESTree.VariableDeclarator>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(variableDeclarator: Readonly<ESTree.VariableDeclarator>, knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>)
     {
         this.variableDeclarator = variableDeclarator;
         this.knownFunctionInfos = knownFunctionInfos;

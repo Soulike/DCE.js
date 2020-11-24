@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 import * as esprima from 'esprima';
-import {ASTNodeFilter as IASTNodeFilter} from './Interface/ASTNodeFilter';
+import {ASTNodeFilter as IASTNodeFilter} from './EsprimaWrapper/Interface/ASTNodeFilter';
 
 export class ASTNodeFilter implements IASTNodeFilter
 {

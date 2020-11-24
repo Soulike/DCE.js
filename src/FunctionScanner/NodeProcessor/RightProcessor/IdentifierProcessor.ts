@@ -6,9 +6,9 @@ export class IdentifierProcessor implements NodeProcessor
 {
     private readonly leftIdentifierNames: Set<string>;
     private readonly identifier: Readonly<ESTree.Identifier>;
-    private readonly knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>;
 
-    constructor(leftIdentifierNames: Set<string>, identifier: Readonly<ESTree.Identifier>, knownFunctionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(leftIdentifierNames: Set<string>, identifier: Readonly<ESTree.Identifier>, knownFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>)
     {
         this.leftIdentifierNames = leftIdentifierNames;
         this.identifier = identifier;

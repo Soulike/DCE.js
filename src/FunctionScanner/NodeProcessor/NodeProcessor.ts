@@ -11,12 +11,12 @@ import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProces
 export class NodeProcessor implements INodeProcessor
 {
     private readonly node: ESTree.Node;
-    private readonly functionInfos: FunctionInfo[];
+    private readonly knownPartialFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>;
 
-    constructor(node: ESTree.Node)
+    constructor(node: ESTree.Node, knownPartialFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>)
     {
         this.node = node;
-        this.functionInfos = [];
+        this.knownPartialFunctionInfos = knownPartialFunctionInfos;
     }
 
     /**
@@ -24,7 +24,7 @@ export class NodeProcessor implements INodeProcessor
      * */
     public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] | null
     {
-        const {node, functionInfos} = this;
+        const {node, knownPartialFunctionInfos} = this;
         switch (node.type)
         {
             case esprima.Syntax.FunctionDeclaration:
@@ -34,12 +34,12 @@ export class NodeProcessor implements INodeProcessor
             }
             case esprima.Syntax.VariableDeclarator:
             {
-                const processor = new VariableDeclaratorProcessor(node, functionInfos);
+                const processor = new VariableDeclaratorProcessor(node, knownPartialFunctionInfos);
                 return processor.getPartialFunctionInfo();
             }
             case esprima.Syntax.AssignmentExpression:
             {
-                const processor = new AssignmentExpressionProcessor(node, functionInfos);
+                const processor = new AssignmentExpressionProcessor(node, knownPartialFunctionInfos);
                 return processor.getPartialFunctionInfo();
             }
             case esprima.Syntax.CallExpression:
