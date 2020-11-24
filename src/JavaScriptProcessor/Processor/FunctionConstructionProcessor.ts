@@ -4,6 +4,7 @@ import {ReplaceInfo} from '../Class/ReplaceInfo';
 import * as esprima from 'esprima';
 import {throwRangeIsUndefinedException} from '../../Function/Throw';
 import {Range} from '../Class/Range';
+import cryptoRandomString from 'crypto-random-string';
 
 export class FunctionConstructionProcessor implements JavaScriptProcessor
 {
@@ -57,7 +58,7 @@ export class FunctionConstructionProcessor implements JavaScriptProcessor
             const argsWithoutBody = argLiterals.slice(0, -1);
             const parameterList = FunctionConstructionProcessor.getArgumentStringFromArgumentNodes(argsWithoutBody);
             const body = argLiterals[argLiterals.length - 1].value; // must be string
-            const code = `function(${parameterList}){${body}}`;
+            const code = `function ${cryptoRandomString({length: 5, type: 'alphanumeric'})}(${parameterList}){${body}}`;
             return new ReplaceInfo(new Range(range[0], range[1]), code);
         }
     }

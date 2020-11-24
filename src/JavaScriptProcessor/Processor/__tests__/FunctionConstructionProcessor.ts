@@ -1,5 +1,4 @@
 import {FunctionConstructionProcessor} from '../FunctionConstructionProcessor';
-import {ReplaceInfo} from '../../Class/ReplaceInfo';
 import {Range} from '../../Class/Range';
 
 describe(FunctionConstructionProcessor, () =>
@@ -52,8 +51,15 @@ describe(FunctionConstructionProcessor, () =>
             ],
         };
         const functionConstructionProcessor = new FunctionConstructionProcessor(newExpression);
-        expect(functionConstructionProcessor.getReplaceInfo())
-            .toEqual(new ReplaceInfo(new Range(86, 126), `function(a,b,c){return a+b+c}`));
+        const replaceInfo = functionConstructionProcessor.getReplaceInfo();
+        expect(replaceInfo).not.toBeNull();
+        if (replaceInfo !== null)
+        {
+            expect(replaceInfo.range).toEqual(new Range(86, 126));
+            // 因为中间有 5 位的随机函数名，所以断开检查
+            expect(replaceInfo.code.slice(0, 'function '.length)).toBe('function ');
+            expect(replaceInfo.code.slice('function '.length + 5)).toBe('(a,b,c){return a+b+c}');
+        }
     });
 
     it('should process function call', function ()
@@ -113,8 +119,14 @@ describe(FunctionConstructionProcessor, () =>
             ],
         };
         const functionConstructionProcessor = new FunctionConstructionProcessor(callExpression);
-        expect(functionConstructionProcessor.getReplaceInfo())
-            .toEqual(new ReplaceInfo(new Range(21, 60), `function(a,b,c){return a+b+c}`));
+        const replaceInfo = functionConstructionProcessor.getReplaceInfo();
+        expect(replaceInfo).not.toBeNull();
+        if (replaceInfo !== null)
+        {
+            expect(replaceInfo.range).toEqual(new Range(86, 126));
+            expect(replaceInfo.code.slice(0, 'function '.length)).toBe('function ');
+            expect(replaceInfo.code.slice('function '.length + 5)).toBe('(a,b,c){return a+b+c}');
+        }
     });
 
     it('should return null if it is not a Function call', function ()

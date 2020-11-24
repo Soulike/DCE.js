@@ -20,7 +20,14 @@ export class EsprimaForFile implements EsprimaWrapper
     public async getNodes()
     {
         const code = await fse.promises.readFile(this.scriptFile.filePath, this.encoding);
-        const esprimaForCode = new EsprimaForCode(code, this.filter);
-        return await esprimaForCode.getNodes();
+        try
+        {
+            const esprimaForCode = new EsprimaForCode(code, this.filter);
+            return await esprimaForCode.getNodes();
+        }
+        catch (e)
+        {
+            throw new Error(`Error when esprima parsing ${this.scriptFile.filePath}\n${e}`);
+        }
     }
 }
