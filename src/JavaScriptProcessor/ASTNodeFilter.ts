@@ -5,9 +5,8 @@ import {ASTNodeFilter as IASTNodeFilter} from '../EsprimaWrapper/Interface/ASTNo
 export class ASTNodeFilter implements IASTNodeFilter
 {
     private static readonly SYNTAX_SHOULD_BE_KEEP: Readonly<Array<string>> = Object.freeze([
-        esprima.Syntax.FunctionDeclaration,
-        esprima.Syntax.FunctionExpression,
-        esprima.Syntax.ArrowFunctionExpression,
+        esprima.Syntax.NewExpression,
+        esprima.Syntax.CallExpression,
     ]);
 
     public shouldKeepNode(node: ESTree.Node): boolean
