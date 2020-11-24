@@ -2,7 +2,7 @@ import {ScriptFile} from '../DataClass/ScriptFile';
 import {FunctionInfo} from '../DataClass/FunctionInfo';
 import fse from 'fs-extra';
 import {FunctionScannerForCode} from './FunctionScannerForCode';
-import {ASTNodeFilter as IASTNodeFilter} from './EsprimaWrapper';
+import {ASTNodeFilter as IASTNodeFilter} from '../EsprimaWrapper';
 import {ASTNodeFilter} from './ASTNodeFilter';
 
 export class FunctionScanner

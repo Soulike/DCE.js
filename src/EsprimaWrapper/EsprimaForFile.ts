@@ -1,5 +1,5 @@
 import {EsprimaWrapper} from './Interface/EsprimaWrapper';
-import {ScriptFile} from '../../DataClass/ScriptFile';
+import {ScriptFile} from '../DataClass/ScriptFile';
 import fse from 'fs-extra';
 import {EsprimaForCode} from './EsprimaForCode';
 import {ASTNodeFilter} from './Interface/ASTNodeFilter';
