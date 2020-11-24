@@ -49,10 +49,12 @@ class ScriptFile
 ```ts
 class FunctionInfo
 {
-    scriptFile: Readonly<ScriptFile> | null,   // 方法所在文件，当描述 global 时值为 null
-    bodyStartIndex: number | null,             // 方法函数体开始的字符位置，当描述 global 时值为 null
-    bodyEndIndex: number | null,               // 方法函数体结束的字符位置，当描述 global 时值为 null
-    name: Set<string> | 'global',              // 方法名，当描述 global 时值为 'global'，当描述匿名函数时集合为空，当引用被传递时增加，作为对象成员时记录整个链。例如对于 obj.a.b.sum，记录 obj.a.b.sum、a.b.sum、b.sum、sum
+    scriptFile: Readonly<ScriptFile> | null,  // 方法所在文件，当描述 global 时值为 null
+    startIndex: number | null,                // 函数代码开始的字符位置，当描述 global 时值为 null
+    endIndex: number | null,                  // 函数代码结束的字符位置（不含），当描述 global 时值为 null
+    bodyStartIndex: number | null,            // 方法函数体开始的字符位置，当描述 global 时值为 null
+    bodyEndIndex: number | null,              // 方法函数体结束的字符位置（不含），当描述 global 时值为 null
+    name: Set<string> | 'global',             // 方法名，当描述 global 时值为 'global'，当描述匿名函数时集合为空，当引用被传递时增加，作为对象成员时记录整个链。例如对于 obj.a.b.sum，记录 obj.a.b.sum、a.b.sum、b.sum、sum
 }
 ```
 
