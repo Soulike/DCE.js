@@ -12,19 +12,22 @@ export class FunctionExpressionProcessor implements NodeProcessor
         this.functionExpression = functionExpression;
     }
 
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex'>
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'>
     {
         const {functionExpression} = this;
-        const {body: {range}} = functionExpression;
-        if (range === undefined)
+        const {range} = functionExpression;
+        const {body: {range: bodyRange}} = functionExpression;
+        if (range === undefined || bodyRange === undefined)
         {
             throwRangeIsUndefinedException();
         }
         else
         {
             return {
-                bodyStartIndex: range[0] + 1,
-                bodyEndIndex: range[1] - 1,
+                startIndex: range[0],
+                endIndex: range[1],
+                bodyStartIndex: bodyRange[0] + 1,
+                bodyEndIndex: bodyRange[1] - 1,
             };
         }
     }

@@ -17,7 +17,7 @@ export class NodeProcessor implements INodeProcessor
         this.functionInfos = [];
     }
 
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
     {
         const {node, functionInfos} = this;
         switch (node.type)

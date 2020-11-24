@@ -20,8 +20,8 @@ export class FunctionScanner
         const functionScannerForCode = new FunctionScannerForCode(code);
         const partialFunctionInfos = await functionScannerForCode.getPartialFunctionInfos();
         return partialFunctionInfos.map(
-            ({name, bodyStartIndex, bodyEndIndex}) =>
-                new FunctionInfo(this.scriptFile, bodyStartIndex, bodyEndIndex, name),
+            ({name, startIndex, endIndex, bodyStartIndex, bodyEndIndex}) =>
+                new FunctionInfo(this.scriptFile, startIndex, endIndex, bodyStartIndex, bodyEndIndex, name),
         );
     }
 }

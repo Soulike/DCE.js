@@ -13,7 +13,7 @@ export class NewExpressionProcessor implements NodeProcessor
         this.newExpression = newExpression;
     }
 
-    getPartialFunctionInfo(): Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex'> | null
+    getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'> | null
     {
         const {newExpression} = this;
         const {callee} = newExpression;
@@ -30,24 +30,28 @@ export class NewExpressionProcessor implements NodeProcessor
                 return null;
             }
             const lastArg = args[args.length - 1];
-            const {range} = lastArg;
-            if (range === undefined)
+            const {range} = newExpression;
+            const {range: bodyRange} = lastArg;
+            if (range === undefined || bodyRange === undefined)
             {
                 throwRangeIsUndefinedException();
             }
+            const [startIndex, endIndex] = range;
             // remove quote marks
             if (lastArg.type === esprima.Syntax.Literal && typeof lastArg.value === 'string')
             {
                 return {
-                    bodyStartIndex: range[0] + 1,
-                    bodyEndIndex: range[1] - 1,
+                    startIndex, endIndex,
+                    bodyStartIndex: bodyRange[0] + 1,
+                    bodyEndIndex: bodyRange[1] - 1,
                 };
             }
             else
             {
                 return {
-                    bodyStartIndex: range[0],
-                    bodyEndIndex: range[1],
+                    startIndex, endIndex,
+                    bodyStartIndex: bodyRange[0],
+                    bodyEndIndex: bodyRange[1],
                 };
             }
         }

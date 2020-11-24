@@ -5,21 +5,27 @@ export class FunctionInfo
     public static readonly GLOBAL = 'global';
 
     public readonly scriptFile: Readonly<ScriptFile> | null;
+    public readonly startIndex: number | null;
+    public readonly endIndex: number | null;
     public readonly bodyStartIndex: number | null;
     public readonly bodyEndIndex: number | null;
     public readonly name: Set<string> | typeof FunctionInfo.GLOBAL;
 
-    constructor(scriptFile: Readonly<ScriptFile> | null, bodyStartIndex: number | null, bodyEndIndex: number | null, name: Set<string> | typeof FunctionInfo.GLOBAL)
+    constructor(scriptFile: Readonly<ScriptFile> | null, startIndex: number | null, endIndex: number | null, bodyStartIndex: number | null, bodyEndIndex: number | null, name: Set<string> | typeof FunctionInfo.GLOBAL)
     {
         if (name === FunctionInfo.GLOBAL)
         {
             this.scriptFile = null;
+            this.startIndex = null;
+            this.endIndex = null;
             this.bodyStartIndex = null;
             this.bodyEndIndex = null;
         }
         else
         {
             this.scriptFile = scriptFile;
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
             this.bodyStartIndex = bodyStartIndex;
             this.bodyEndIndex = bodyEndIndex;
         }
@@ -28,7 +34,7 @@ export class FunctionInfo
 
     public equals(functionInfo: FunctionInfo): boolean
     {
-        const {scriptFile, bodyStartIndex, bodyEndIndex, name} = functionInfo;
+        const {scriptFile, startIndex, endIndex, name} = functionInfo;
         if (scriptFile === null)
         {
             return this.name === FunctionInfo.GLOBAL;
@@ -40,8 +46,8 @@ export class FunctionInfo
         else
         {
             return scriptFile.equals(this.scriptFile)
-                && bodyStartIndex === this.bodyStartIndex
-                && bodyEndIndex === this.bodyEndIndex;
+                && startIndex === this.startIndex
+                && endIndex === this.endIndex;
         }
     }
 }

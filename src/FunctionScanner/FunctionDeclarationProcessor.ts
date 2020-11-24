@@ -12,7 +12,7 @@ export class FunctionDeclarationProcessor implements NodeProcessor
         this.functionDeclaration = functionDeclaration;
     }
 
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex' | 'name'>
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>
     {
         const {functionDeclaration} = this;
 
@@ -23,13 +23,16 @@ export class FunctionDeclarationProcessor implements NodeProcessor
         }
         name.add(functionDeclaration.id.name);
 
-        const {body: {range}} = functionDeclaration;
-        if (range === undefined)
+        const {range, body: {range: bodyRange}} = functionDeclaration;
+        if (range === undefined || bodyRange === undefined)
         {
             throwRangeIsUndefinedException();
         }
-        const [bodyStartIndex, bodyEndIndex] = [range[0] + 1, range[1] - 1];
+        const [startIndex, endIndex] = range;
+        const [bodyStartIndex, bodyEndIndex] = [bodyRange[0] + 1, bodyRange[1] - 1];
         return {
+            startIndex,
+            endIndex,
             bodyStartIndex,
             bodyEndIndex,
             name,
