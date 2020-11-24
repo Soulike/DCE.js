@@ -5,41 +5,28 @@ export class FunctionInfo
     public readonly scriptFile: Readonly<ScriptFile> | null;
     public readonly startIndex: number | null;
     public readonly endIndex: number | null;
-    public readonly name: Set<string> | 'global';
+    public readonly bodyStartIndex: number | null;
+    public readonly bodyEndIndex: number | null;
 
-    constructor(scriptFile: Readonly<ScriptFile> | null, startIndex: number | null, endIndex: number | null, name: Set<string> | 'global')
+    constructor(scriptFile: Readonly<ScriptFile> | null, startIndex: number | null, endIndex: number | null, bodyStartIndex: number | null, bodyEndIndex: number | null)
     {
-        if (name === 'global')
-        {
-            this.scriptFile = null;
-            this.startIndex = null;
-            this.endIndex = null;
-        }
-        else
-        {
-            this.scriptFile = scriptFile;
-            this.startIndex = startIndex;
-            this.endIndex = endIndex;
-        }
-        this.name = name;
+        this.scriptFile = scriptFile;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.bodyStartIndex = bodyStartIndex;
+        this.bodyEndIndex = bodyEndIndex;
     }
 
     public equals(functionInfo: FunctionInfo): boolean
     {
-        const {scriptFile, startIndex, endIndex, name} = functionInfo;
-        if (scriptFile === null)
+        const {scriptFile, startIndex, endIndex} = functionInfo;
+        if (scriptFile === null || startIndex === null || endIndex === null
+            || this.scriptFile === null || this.startIndex === null || this.endIndex === null)
         {
-            return this.name === 'global';
+            return false;
         }
-        else if (this.scriptFile === null)
-        {
-            return name === 'global';
-        }
-        else
-        {
-            return scriptFile.equals(this.scriptFile)
-                && startIndex === this.startIndex
-                && endIndex === this.endIndex;
-        }
+        return scriptFile.equals(this.scriptFile)
+            && startIndex === this.startIndex
+            && endIndex === this.endIndex;
     }
 }

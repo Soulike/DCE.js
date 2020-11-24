@@ -3,13 +3,13 @@ import {ScriptFile} from '../ScriptFile';
 
 describe(FunctionInfo, () =>
 {
-    const global = new FunctionInfo(null, null, null, 'global');
-    const nonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 20, new Set());
-    const global2 = new FunctionInfo(null, null, null, 'global');
-    const nonGlobal2 = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 20, new Set());
-    const changeScriptFileNonGlobal = new FunctionInfo(new ScriptFile('/a/c.js'), 0, 20, new Set());
-    const changeStartIndexNonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 2, 20, new Set());
-    const changeEndIndexNonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 21, new Set());
+    const global = new FunctionInfo(null, null, null, null, null, FunctionInfo.GLOBAL);
+    const nonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 20, 0, 20, new Set());
+    const global2 = new FunctionInfo(null, null, null, null, null, FunctionInfo.GLOBAL);
+    const nonGlobal2 = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 20, 0, 20, new Set());
+    const changeScriptFileNonGlobal = new FunctionInfo(new ScriptFile('/a/c.js'), 0, 20, 0, 20, new Set());
+    const changeStartIndexNonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 2, 20, 0, 20, new Set());
+    const changeEndIndexNonGlobal = new FunctionInfo(new ScriptFile('/a/b.js'), 0, 21, 0, 20, new Set());
 
     it('global to global', function ()
     {
@@ -31,12 +31,12 @@ describe(FunctionInfo, () =>
         expect(nonGlobal.equals(changeScriptFileNonGlobal)).toBe(false);
     });
 
-    it('non-global to non-global with startIndex changed', function ()
+    it('non-global to non-global with bodyStartIndex changed', function ()
     {
         expect(nonGlobal.equals(changeStartIndexNonGlobal)).toBe(false);
     });
 
-    it('non-global to non-global with endIndex changed', function ()
+    it('non-global to non-global with bodyEndIndex changed', function ()
     {
         expect(nonGlobal.equals(changeEndIndexNonGlobal)).toBe(false);
     });

@@ -49,29 +49,15 @@ class ScriptFile
 ```ts
 class FunctionInfo
 {
-    scriptFile: Readonly<ScriptFile> | null,   // 方法所在文件，当描述 global 时值为 null
-    startIndex: number | null,                 // 方法开始的字符位置，当描述 global 时值为 null
-    endIndex: number | null,                   // 方法结束的字符位置，当描述 global 时值为 null
-    name: Set<string> | 'global',              // 方法名，当描述 global 时值为 'global'，当描述匿名函数时集合为空，当引用被传递时增加
+    scriptFile: Readonly<ScriptFile> | null,  // 方法所在文件，当描述 global 时值为 null
+    startIndex: number | null,                // 函数代码开始的字符位置，当描述 global 时值为 null
+    endIndex: number | null,                  // 函数代码结束的字符位置（不含），当描述 global 时值为 null
+    bodyStartIndex: number | null,            // 方法函数体开始的字符位置，当描述 global 时值为 null
+    bodyEndIndex: number | null,              // 方法函数体结束的字符位置（不含），当描述 global 时值为 null
 }
 ```
 
 ### 4. 静态函数调用识别
-
-- 输入：3 中产生的 `FunctionInfo[]`，截取对应的代码进行静态分析
-- 输出：`StaticFunctionCall[]`
-- 备注：
-  - （暂定）数据结构
-
-```ts
-class StaticFunctionCall
-{
-    functionInfo: FunctionInfo, // caller 的信息
-    calleeNames: Set<string>,   // callee 的名字
-}
-```
-
-### 5. 动态函数调用识别
 
 - 输入：`ScriptFile[]`
 - 输出：`FunctionCall[]`
@@ -81,34 +67,35 @@ class StaticFunctionCall
 ```ts
 class FunctionCall
 {
-    functionInfo: FunctionInfo, // caller 的信息
-    callee: FunctionInfo[],  // callee 的信息
+    caller: FunctionInfo,
+    callee: FunctionInfo[],
 }
 ```
 
-### 6. 静态函数调用识别结果处理
+### 5. 动态函数调用识别
 
-- 说明：将函数名转换为实际对应的函数信息
-- 输入：4 中产生的 `StaticFunctionCall[]`
+- 输入：`ScriptFile[]`
 - 输出：`FunctionCall[]`
 - 备注：无
 
-### 7. 调用图合并
+### 6. 调用图合并
 
 - 输入：多个 `FunctionCall[]`
 - 输出：合并过的 `FunctionCall[]`
 - 备注：无
 
-### 8. 孤立结点识别
+### 7. 孤立结点识别
 
 - 输入：`FunctionCall` 实例，这个实例代表 `global`
 - 输出：`FunctionInfo[]`，其中包含所有孤立结点
 - 备注：
   - 孤立结点指从 `global` 不可达的结点
 
-### 9. 函数体删除
+### 8. 函数体删除
 
 - 输入：`FunctionInfo[]`，其中包含所有孤立结点
 - 输出：删除 `FunctionInfo` 实例中对应文件中函数的函数体
 - 备注：
   - 删除不改变函数的行号信息
+  - 不能使用全空格替换。可以在空格中插入一个字面量
+    - 主要为了兼容 `() => 1+1` 的箭头函数 

@@ -2,578 +2,78 @@
 
 ## 说明
 
-通过调用 esprima 获取某个文件当中所有的方法定义信息。
+通过调用 esprima 获取某个文件当中所有的函数定义。
+
+## 流程
+
+1. 获取所有定义函数的结点
+2. 识别结点类型
+3. 做适当处理
+
+## 模块
+
+1. `EsprimaWrapper`
+2. `NodeProcessor`
+   - `FunctionDeclarationProcessor`
+   - `FunctionExpressionProcessor`
+   - `ArrowFunctionExpressionProcessor`
 
 ## 函数定义形式
 
+### 函数声明
+
 ```js
 function sum(a, b) {return a + b;}
+```
 
-{
-    "type": "FunctionDeclaration",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            10,
-            13
-        ]
-    },
-    "params": [
-        {
-            "type": "Identifier",
-            "name": "a",
-            "range": [
-                14,
-                15
-            ]
-        },
-        {
-            "type": "Identifier",
-            "name": "b",
-            "range": [
-                17,
-                18
-            ]
-        }
-    ],
-    "body": {
-        "type": "BlockStatement",
-        "body": [
-            {
-                "type": "ReturnStatement",
-                "argument": {
-                    "type": "BinaryExpression",
-                    "operator": "+",
-                    "left": {
-                        "type": "Identifier",
-                        "name": "a",
-                        "range": [
-                            28,
-                            29
-                        ]
-                    },
-                    "right": {
-                        "type": "Identifier",
-                        "name": "b",
-                        "range": [
-                            32,
-                            33
-                        ]
-                    },
-                    "range": [
-                        28,
-                        33
-                    ]
-                },
-                "range": [
-                    21,
-                    34
-                ]
-            }
-        ],
-        "range": [
-            20,
-            35
-        ]
-    },
-    "generator": false,
-    "expression": false,
-    "async": false,
-    "range": [
-        1,
-        35
-    ]
+```ts
+interface FunctionDeclaration 
+{ 
+    type: 'FunctionDeclaration'; 
+    id: Identifier | null; 
+    params: FunctionParameter[]; 
+    body: BlockStatement; 
+    generator: boolean;
+    async: boolean;
+    expression: false; 
 }
 ```
 
-```js
-var sum = function (a, b) {return a + b;}
+### 函数表达式
 
+```js
+function(a, b) {return a + b;}
+```
+
+```ts
+interface FunctionExpression 
 {
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            5,
-            8
-        ]
-    },
-    "init": {
-        "type": "FunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    21,
-                    22
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    24,
-                    25
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                35,
-                                36
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                39,
-                                40
-                            ]
-                        },
-                        "range": [
-                            35,
-                            40
-                        ]
-                    },
-                    "range": [
-                        28,
-                        41
-                    ]
-                }
-            ],
-            "range": [
-                27,
-                42
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            11,
-            42
-        ]
-    },
-    "range": [
-        5,
-        42
-    ]
+    type: 'FunctionExpression'; 
+    id: Identifier | null; 
+    params: FunctionParameter[]; 
+    body: BlockStatement; 
+    generator: boolean;
+    async: boolean;
+    expression: boolean; 
 }
 ```
 
-```js
-sum = function (a, b) {return a + b;}
+### 箭头函数表达式
 
-{
-    "type": "AssignmentExpression",
-    "operator": "=",
-    "left": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            1,
-            4
-        ]
-    },
-    "right": {
-        "type": "FunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    17,
-                    18
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    20,
-                    21
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                31,
-                                32
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                35,
-                                36
-                            ]
-                        },
-                        "range": [
-                            31,
-                            36
-                        ]
-                    },
-                    "range": [
-                        24,
-                        37
-                    ]
-                }
-            ],
-            "range": [
-                23,
-                38
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            7,
-            38
-        ]
-    },
-    "range": [
-        1,
-        38
-    ]
-}
+```js
+(a, b) => a + b;
+(a, b) => {return a + b;};
 ```
 
-```js
-var sum = (a, b) => {return a + b;}
-
-{
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            5,
-            8
-        ]
-    },
-    "init": {
-        "type": "ArrowFunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    12,
-                    13
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    15,
-                    16
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                29,
-                                30
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                33,
-                                34
-                            ]
-                        },
-                        "range": [
-                            29,
-                            34
-                        ]
-                    },
-                    "range": [
-                        22,
-                        35
-                    ]
-                }
-            ],
-            "range": [
-                21,
-                36
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            11,
-            36
-        ]
-    },
-    "range": [
-        5,
-        36
-    ]
-}
-```
-
-```js
-eval(`function sum(a, b) {return a+b;}`);
-
-{
-    "type": "CallExpression",
-    "callee": {
-        "type": "Identifier",
-        "name": "eval",
-        "range": [
-            1,
-            5
-        ]
-    },
-    "arguments": [
-        {
-            "type": "TemplateLiteral",
-            "quasis": [
-                {
-                    "type": "TemplateElement",
-                    "value": {
-                        "raw": "function sum(a, b) {return a+b;}",
-                        "cooked": "function sum(a, b) {return a+b;}"
-                    },
-                    "tail": true,
-                    "range": [
-                        6,
-                        40
-                    ]
-                }
-            ],
-            "expressions": [],
-            "range": [
-                6,
-                40
-            ]
-        }
-    ],
-    "range": [
-        1,
-        41
-    ]
-}
-```
-
-```js
-const sum = new Function('a', 'b', 'return a + b');
-
-{
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            7,
-            10
-        ]
-    },
-    "init": {
-        "type": "NewExpression",
-        "callee": {
-            "type": "Identifier",
-            "name": "Function",
-            "range": [
-                17,
-                25
-            ]
-        },
-        "arguments": [
-            {
-                "type": "Literal",
-                "value": "a",
-                "raw": "'a'",
-                "range": [
-                    26,
-                    29
-                ]
-            },
-            {
-                "type": "Literal",
-                "value": "b",
-                "raw": "'b'",
-                "range": [
-                    31,
-                    34
-                ]
-            },
-            {
-                "type": "Literal",
-                "value": "return a + b",
-                "raw": "'return a + b'",
-                "range": [
-                    36,
-                    50
-                ]
-            }
-        ],
-        "range": [
-            13,
-            51
-        ]
-    },
-    "range": [
-        7,
-        51
-    ]
-}
-```
-
-此外，需要考虑函数引用的传递：
-
-```js
-var sum = function (a, b) {return a + b;}
-var sum2 = sum;
-
-{
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            5,
-            8
-        ]
-    },
-    "init": {
-        "type": "FunctionExpression",
-        "id": null,
-        "params": [
-            {
-                "type": "Identifier",
-                "name": "a",
-                "range": [
-                    21,
-                    22
-                ]
-            },
-            {
-                "type": "Identifier",
-                "name": "b",
-                "range": [
-                    24,
-                    25
-                ]
-            }
-        ],
-        "body": {
-            "type": "BlockStatement",
-            "body": [
-                {
-                    "type": "ReturnStatement",
-                    "argument": {
-                        "type": "BinaryExpression",
-                        "operator": "+",
-                        "left": {
-                            "type": "Identifier",
-                            "name": "a",
-                            "range": [
-                                35,
-                                36
-                            ]
-                        },
-                        "right": {
-                            "type": "Identifier",
-                            "name": "b",
-                            "range": [
-                                39,
-                                40
-                            ]
-                        },
-                        "range": [
-                            35,
-                            40
-                        ]
-                    },
-                    "range": [
-                        28,
-                        41
-                    ]
-                }
-            ],
-            "range": [
-                27,
-                42
-            ]
-        },
-        "generator": false,
-        "expression": false,
-        "async": false,
-        "range": [
-            11,
-            42
-        ]
-    },
-    "range": [
-        5,
-        42
-    ]
-}
-{
-    "type": "VariableDeclarator",
-    "id": {
-        "type": "Identifier",
-        "name": "sum2",
-        "range": [
-            47,
-            51
-        ]
-    },
-    "init": {
-        "type": "Identifier",
-        "name": "sum",
-        "range": [
-            54,
-            57
-        ]
-    },
-    "range": [
-        47,
-        57
-    ]
+```ts
+interface ArrowFunctionExpression 
+{ 
+    type: 'ArrowFunctionExpression'; 
+    id: Identifier | null;
+    params: FunctionParameter[];
+    body: BlockStatement | Expression; 
+    generator: boolean;
+    async: boolean;
+    expression: false; 
 }
 ```
