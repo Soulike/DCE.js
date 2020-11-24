@@ -20,6 +20,11 @@ export class FunctionInfo
     public equals(functionInfo: FunctionInfo): boolean
     {
         const {scriptFile, startIndex, endIndex} = functionInfo;
+        if (scriptFile === null && startIndex === null && endIndex === null
+            && this.scriptFile === null && this.startIndex === null && this.endIndex === null)
+        {
+            return true;
+        }
         if (scriptFile === null || startIndex === null || endIndex === null
             || this.scriptFile === null || this.startIndex === null || this.endIndex === null)
         {
