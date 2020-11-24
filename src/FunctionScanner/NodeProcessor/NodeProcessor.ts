@@ -6,6 +6,7 @@ import {FunctionDeclarationProcessor} from './FunctionDeclarationProcessor';
 import {VariableDeclaratorProcessor} from './VariableDeclaratorProcessor';
 import {AssignmentExpressionProcessor} from './AssignmentExpressionProcessor';
 import {CallExpressionProcessor} from './CallExpressionProcessor';
+import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProcessor';
 
 export class NodeProcessor implements INodeProcessor
 {
@@ -19,7 +20,7 @@ export class NodeProcessor implements INodeProcessor
     }
 
     /**
-     * @description if need to add new processors, add them here.
+     * @description if need to add new processors, add them here. Remember to add the new node type to ESPrimaWrapper/ASTNodeFilter.ts
      * */
     public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] | null
     {
@@ -44,6 +45,11 @@ export class NodeProcessor implements INodeProcessor
             case esprima.Syntax.CallExpression:
             {
                 const processor = new CallExpressionProcessor(node);
+                return processor.getPartialFunctionInfo();
+            }
+            case esprima.Syntax.ObjectExpression:
+            {
+                const processor = new ObjectExpressionProcessor(node);
                 return processor.getPartialFunctionInfo();
             }
             default:

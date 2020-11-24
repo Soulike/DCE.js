@@ -8,6 +8,7 @@ import {NewExpressionProcessor} from './RightProcessor/NewExpressionProcessor';
 import {IdentifierProcessor} from './RightProcessor/IdentifierProcessor';
 import {MemberExpressionProcessor} from './RightProcessor/MemberExpressionProcessor';
 import {getNamesFromChainedMemberExpression} from '../Function';
+import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProcessor';
 
 export class AssignmentExpressionProcessor implements NodeProcessor
 {
@@ -23,11 +24,11 @@ export class AssignmentExpressionProcessor implements NodeProcessor
     /**
      * @return A new FunctionInfo that should be logged, or null if no new FunctionInfo.
      * */
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] | null
     {
         const {assignmentExpression} = this;
-        const names = this.getLeftNames();
-        if (names === null)
+        const leftNames = this.getLeftNames();
+        if (leftNames === null)
         {
             return null;
         }
@@ -38,13 +39,13 @@ export class AssignmentExpressionProcessor implements NodeProcessor
             {
                 const functionExpressionProcessor = new FunctionExpressionProcessor(assignmentExpression.right);
                 const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = functionExpressionProcessor.getPartialFunctionInfo();
-                return {name: names, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+                return {name: leftNames, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.ArrowFunctionExpression:
             {
                 const arrowFunctionExpressionProcessor = new ArrowFunctionExpressionProcessor(assignmentExpression.right);
                 const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = arrowFunctionExpressionProcessor.getPartialFunctionInfo();
-                return {name: names, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+                return {name: leftNames, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.NewExpression:
             {
@@ -55,17 +56,38 @@ export class AssignmentExpressionProcessor implements NodeProcessor
                     return null;
                 }
                 const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = partialFunctionInfo;
-                return {name: names, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+                return {name: leftNames, startIndex, endIndex, bodyStartIndex, bodyEndIndex};
+            }
+            case esprima.Syntax.ObjectExpression:
+            {
+                const processor = new ObjectExpressionProcessor(assignmentExpression.right);
+                const partialFunctionInfos = processor.getPartialFunctionInfo();
+                partialFunctionInfos.forEach(partialFunctionInfo =>
+                {
+                    const {name: nameSet} = partialFunctionInfo;
+                    if (nameSet !== FunctionInfo.GLOBAL)
+                    {
+                        const names = [...nameSet];
+                        names.forEach(name =>
+                        {
+                            leftNames.forEach(leftName =>
+                            {
+                                nameSet.add(`${leftName}.${name}`);
+                            });
+                        });
+                    }
+                });
+                return partialFunctionInfos;
             }
             case esprima.Syntax.Identifier:
             {
-                const identifierProcessor = new IdentifierProcessor(new Set(names), assignmentExpression.right, this.knownFunctionInfos);
+                const identifierProcessor = new IdentifierProcessor(new Set(leftNames), assignmentExpression.right, this.knownFunctionInfos);
                 identifierProcessor.getPartialFunctionInfo();
                 return null;
             }
             case esprima.Syntax.MemberExpression:
             {
-                const memberExpressionProcessor = new MemberExpressionProcessor(new Set(names), assignmentExpression.right, this.knownFunctionInfos);
+                const memberExpressionProcessor = new MemberExpressionProcessor(new Set(leftNames), assignmentExpression.right, this.knownFunctionInfos);
                 memberExpressionProcessor.getPartialFunctionInfo();
                 return null;
             }
