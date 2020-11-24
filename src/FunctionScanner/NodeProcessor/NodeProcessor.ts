@@ -2,11 +2,10 @@ import * as ESTree from 'estree';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {NodeProcessor as INodeProcessor} from './Interface/NodeProcessor';
 import * as esprima from 'esprima';
-import {FunctionDeclarationProcessor} from './FunctionDeclarationProcessor';
-import {VariableDeclaratorProcessor} from './VariableDeclaratorProcessor';
-import {AssignmentExpressionProcessor} from './AssignmentExpressionProcessor';
-import {CallExpressionProcessor} from './CallExpressionProcessor';
-import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProcessor';
+import {FunctionDeclarationProcessor} from './NodeProcessor/FunctionDeclarationProcessor';
+import {VariableDeclaratorProcessor} from './NodeProcessor/VariableDeclaratorProcessor';
+import {AssignmentExpressionProcessor} from './NodeProcessor/AssignmentExpressionProcessor';
+import {CallExpressionProcessor} from './NodeProcessor/CallExpressionProcessor';
 
 export class NodeProcessor implements INodeProcessor
 {
@@ -45,11 +44,6 @@ export class NodeProcessor implements INodeProcessor
             case esprima.Syntax.CallExpression:
             {
                 const processor = new CallExpressionProcessor(node);
-                return processor.getPartialFunctionInfo();
-            }
-            case esprima.Syntax.ObjectExpression:
-            {
-                const processor = new ObjectExpressionProcessor(node);
                 return processor.getPartialFunctionInfo();
             }
             default:

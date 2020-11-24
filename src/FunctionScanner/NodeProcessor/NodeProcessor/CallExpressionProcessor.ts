@@ -1,9 +1,9 @@
-import {NodeProcessor} from './Interface/NodeProcessor';
+import {NodeProcessor} from '../Interface/NodeProcessor';
 import * as ESTree from 'estree';
 import * as esprima from 'esprima';
-import {FunctionInfo} from '../../DataClass/FunctionInfo';
-import {FunctionExpressionProcessor} from './RightProcessor/FunctionExpressionProcessor';
-import {ArrowFunctionExpressionProcessor} from './RightProcessor/ArrowFunctionExpressionProcessor';
+import {FunctionInfo} from '../../../DataClass/FunctionInfo';
+import {FunctionExpressionProcessor} from '../RightProcessor/FunctionExpressionProcessor';
+import {ArrowFunctionExpressionProcessor} from '../RightProcessor/ArrowFunctionExpressionProcessor';
 
 /**
  * @description process function expression as function parameter. e.g. func(() => 1+1, () => 1+2)

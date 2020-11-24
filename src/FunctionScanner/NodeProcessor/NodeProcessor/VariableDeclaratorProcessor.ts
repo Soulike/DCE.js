@@ -1,13 +1,13 @@
-import {NodeProcessor} from './Interface/NodeProcessor';
+import {NodeProcessor} from '../Interface/NodeProcessor';
 import * as ESTree from 'estree';
-import {FunctionInfo} from '../../DataClass/FunctionInfo';
+import {FunctionInfo} from '../../../DataClass/FunctionInfo';
 import * as esprima from 'esprima';
-import {FunctionExpressionProcessor} from './RightProcessor/FunctionExpressionProcessor';
-import {ArrowFunctionExpressionProcessor} from './RightProcessor/ArrowFunctionExpressionProcessor';
-import {NewExpressionProcessor} from './RightProcessor/NewExpressionProcessor';
-import {IdentifierProcessor} from './RightProcessor/IdentifierProcessor';
-import {MemberExpressionProcessor} from './RightProcessor/MemberExpressionProcessor';
-import {ObjectExpressionProcessor} from './RightProcessor/ObjectExpressionProcessor';
+import {FunctionExpressionProcessor} from '../RightProcessor/FunctionExpressionProcessor';
+import {ArrowFunctionExpressionProcessor} from '../RightProcessor/ArrowFunctionExpressionProcessor';
+import {NewExpressionProcessor} from '../RightProcessor/NewExpressionProcessor';
+import {IdentifierProcessor} from '../RightProcessor/IdentifierProcessor';
+import {MemberExpressionProcessor} from '../RightProcessor/MemberExpressionProcessor';
+import {ObjectExpressionProcessor} from '../RightProcessor/ObjectExpressionProcessor';
 
 export class VariableDeclaratorProcessor implements NodeProcessor
 {
