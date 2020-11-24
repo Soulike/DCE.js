@@ -19,23 +19,23 @@ export class FunctionScannerForCode
     {
         const esprimaForCode = new EsprimaForCode(this.code, this.astNodeFilter);
         const nodes = await esprimaForCode.getNodes();
-        const partialFunctionInfos: Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] = [];
+        const knownPartialFunctionInfosInCurrentCode: Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] = [];
         for (const node of nodes)
         {
-            const nodeProcessor = new NodeProcessor(node, partialFunctionInfos);
+            const nodeProcessor = new NodeProcessor(node, knownPartialFunctionInfosInCurrentCode);
             const partialFunctionInfosFromNode = nodeProcessor.getPartialFunctionInfo();
             if (partialFunctionInfosFromNode !== null)
             {
                 if (Array.isArray(partialFunctionInfosFromNode))
                 {
-                    partialFunctionInfos.push(...partialFunctionInfosFromNode);
+                    knownPartialFunctionInfosInCurrentCode.push(...partialFunctionInfosFromNode);
                 }
                 else
                 {
-                    partialFunctionInfos.push(partialFunctionInfosFromNode);
+                    knownPartialFunctionInfosInCurrentCode.push(partialFunctionInfosFromNode);
                 }
             }
         }
-        return partialFunctionInfos;
+        return knownPartialFunctionInfosInCurrentCode;
     }
 }
