@@ -14,7 +14,7 @@ export class ArrowFunctionExpressionProcessor implements NodeProcessor
         this.arrowFunctionExpression = arrowFunctionExpression;
     }
 
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex'>
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'>
     {
         const {arrowFunctionExpression} = this;
         const {body} = arrowFunctionExpression;
@@ -32,14 +32,17 @@ export class ArrowFunctionExpressionProcessor implements NodeProcessor
         }
         else    // body is a Expression, e.g. () => 1+1
         {
-            const {range} = body;
-            if (range === undefined)
+            const {range} = arrowFunctionExpression;
+            const {range: bodyRange} = body;
+            if (range === undefined || bodyRange === undefined)
             {
                 throwRangeIsUndefinedException();
             }
             return {
-                bodyStartIndex: range[0],
-                bodyEndIndex: range[1],
+                startIndex: range[0],
+                endIndex: range[1],
+                bodyStartIndex: bodyRange[0],
+                bodyEndIndex: bodyRange[1],
             };
         }
     }

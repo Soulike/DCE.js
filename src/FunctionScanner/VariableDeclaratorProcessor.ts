@@ -22,7 +22,7 @@ export class VariableDeclaratorProcessor implements NodeProcessor
     /**
      * @return A new FunctionInfo that should be logged, or null if no new FunctionInfo.
      * */
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | null
     {
         const {variableDeclarator} = this;
         if (variableDeclarator.init === undefined || variableDeclarator.init === null)
@@ -40,14 +40,14 @@ export class VariableDeclaratorProcessor implements NodeProcessor
             case esprima.Syntax.FunctionExpression:
             {
                 const functionExpressionProcessor = new FunctionExpressionProcessor(variableDeclarator.init);
-                const {bodyStartIndex, bodyEndIndex} = functionExpressionProcessor.getPartialFunctionInfo();
-                return {name: new Set([name]), bodyStartIndex, bodyEndIndex};
+                const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = functionExpressionProcessor.getPartialFunctionInfo();
+                return {name: new Set([name]), startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.ArrowFunctionExpression:
             {
                 const arrowFunctionExpressionProcessor = new ArrowFunctionExpressionProcessor(variableDeclarator.init);
-                const {bodyStartIndex, bodyEndIndex} = arrowFunctionExpressionProcessor.getPartialFunctionInfo();
-                return {name: new Set([name]), bodyStartIndex, bodyEndIndex};
+                const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = arrowFunctionExpressionProcessor.getPartialFunctionInfo();
+                return {name: new Set([name]), startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.NewExpression:
             {
@@ -57,8 +57,8 @@ export class VariableDeclaratorProcessor implements NodeProcessor
                 {
                     return null;
                 }
-                const {bodyStartIndex, bodyEndIndex} = partialFunctionInfo;
-                return {name: new Set([name]), bodyStartIndex, bodyEndIndex};
+                const {startIndex, endIndex, bodyStartIndex, bodyEndIndex} = partialFunctionInfo;
+                return {name: new Set([name]), startIndex, endIndex, bodyStartIndex, bodyEndIndex};
             }
             case esprima.Syntax.Identifier:
             {

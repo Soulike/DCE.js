@@ -11,11 +11,11 @@ export class FunctionScannerForCode
         this.code = code;
     }
 
-    public async getPartialFunctionInfos(): Promise<Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[]>
+    public async getPartialFunctionInfos(): Promise<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[]>
     {
         const esprimaForCode = new EsprimaForCode(this.code);
         const nodes = await esprimaForCode.getNodes();
-        const partialFunctionInfos: Pick<FunctionInfo, 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] = [];
+        const partialFunctionInfos: Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] = [];
         for (const node of nodes)
         {
             const nodeProcessor = new NodeProcessor(node);
