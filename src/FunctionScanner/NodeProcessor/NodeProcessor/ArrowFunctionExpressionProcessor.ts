@@ -1,9 +1,9 @@
 import * as ESTree from 'estree';
 import {NodeProcessor} from '../Interface/NodeProcessor';
 import {FunctionInfo} from '../../../DataClass/FunctionInfo';
-import {throwRangeIsUndefinedException} from '../../Function';
 import * as esprima from 'esprima';
 import {FunctionExpressionProcessor} from './FunctionExpressionProcessor';
+import {throwRangeIsUndefinedException} from '../../../Function/Throw';
 
 export class ArrowFunctionExpressionProcessor implements NodeProcessor
 {

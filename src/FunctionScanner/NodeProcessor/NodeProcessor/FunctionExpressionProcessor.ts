@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 import {NodeProcessor} from '../Interface/NodeProcessor';
 import {FunctionInfo} from '../../../DataClass/FunctionInfo';
-import {throwRangeIsUndefinedException} from '../../Function';
+import {throwRangeIsUndefinedException} from '../../../Function/Throw';
 
 export class FunctionExpressionProcessor implements NodeProcessor
 {

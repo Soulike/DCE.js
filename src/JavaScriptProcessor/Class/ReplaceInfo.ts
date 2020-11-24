@@ -1,3 +1,5 @@
+import {Range} from './Range';
+
 export class ReplaceInfo
 {
     public readonly range: Readonly<Range>;

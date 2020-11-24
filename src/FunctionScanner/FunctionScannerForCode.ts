@@ -1,8 +1,8 @@
 import {FunctionInfo} from '../DataClass/FunctionInfo';
-import {EsprimaForCode} from './EsprimaWrapper';
+import {EsprimaForCode} from '../EsprimaWrapper';
 import {NodeProcessor} from './NodeProcessor';
 import {ASTNodeFilter} from './ASTNodeFilter';
-import {ASTNodeFilter as IASTNodeFilter} from './EsprimaWrapper/Interface/ASTNodeFilter';
+import {ASTNodeFilter as IASTNodeFilter} from '../EsprimaWrapper/Interface/ASTNodeFilter';
 
 export class FunctionScannerForCode
 {

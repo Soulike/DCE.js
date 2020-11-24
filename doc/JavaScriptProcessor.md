@@ -6,10 +6,10 @@
 
 ## 模块划分
 
-### NewExpressionProcessor
+### FunctionConstructionProcessor
 
-处理 `new Function()`。
+处理 `new Function()` 和 `Function()`。
 
-### CallExpressionProcessor
+### EvalProcessor
 
-处理 `eval()` 和 `Function()`。对于 `eval`，当且仅当参数是字符串字面量时做替换。
+处理 `eval()`，当且仅当参数是字符串字面量时做替换。
