@@ -20,9 +20,13 @@ export class JavaScriptProcessor
 
     public async doProcess(): Promise<void>
     {
-        const replaceInfos = await this.getReplaceInfos();
-        const fileReplacer = new FileReplacer(this.scriptFile, replaceInfos, this.encoding);
-        await fileReplacer.doProcess();
+        let replaceInfos = await this.getReplaceInfos();
+        while (replaceInfos.length !== 0)   // do process until no replacement is needed
+        {
+            const fileReplacer = new FileReplacer(this.scriptFile, replaceInfos, this.encoding);
+            await fileReplacer.doProcess();
+            replaceInfos = await this.getReplaceInfos();
+        }
     }
 
     private async getReplaceInfos(): Promise<ReplaceInfo[]>
