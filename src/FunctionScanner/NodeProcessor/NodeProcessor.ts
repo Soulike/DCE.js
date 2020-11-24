@@ -20,7 +20,7 @@ export class NodeProcessor implements INodeProcessor
     }
 
     /**
-     * @description if need to add new processors, add them here. Remember to add the new node type to ESPrimaWrapper/ASTNodeFilter.ts
+     * @description if need to add new processors, add them here. Remember to add the new node type to ASTNodeFilter.ts
      * */
     public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] | null
     {

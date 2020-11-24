@@ -1,6 +1,7 @@
 import {FunctionInfo} from '../DataClass/FunctionInfo';
 import {EsprimaForCode} from './EsprimaWrapper';
 import {NodeProcessor} from './NodeProcessor';
+import {ASTNodeFilter} from './EsprimaWrapper/ASTNodeFilter';
 
 export class FunctionScannerForCode
 {
@@ -13,7 +14,7 @@ export class FunctionScannerForCode
 
     public async getPartialFunctionInfos(): Promise<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[]>
     {
-        const esprimaForCode = new EsprimaForCode(this.code);
+        const esprimaForCode = new EsprimaForCode(this.code, new ASTNodeFilter());
         const nodes = await esprimaForCode.getNodes();
         const partialFunctionInfos: Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] = [];
         for (const node of nodes)
