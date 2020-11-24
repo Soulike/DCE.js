@@ -4,5 +4,5 @@ export type PartialFunctionInfo = Pick<FunctionInfo, 'startIndex' | 'endIndex' |
 
 export interface NodeProcessor
 {
-    getPartialFunctionInfo(): PartialFunctionInfo | PartialFunctionInfo[] | null;
+    getPartialFunctionInfo(): PartialFunctionInfo | null;
 }

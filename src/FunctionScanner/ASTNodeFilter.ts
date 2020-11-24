@@ -7,9 +7,7 @@ export class ASTNodeFilter implements IASTNodeFilter
     private static readonly SYNTAX_SHOULD_BE_KEEP: Readonly<Array<string>> = Object.freeze([
         esprima.Syntax.FunctionDeclaration,
         esprima.Syntax.FunctionExpression,
-        esprima.Syntax.VariableDeclarator,
-        esprima.Syntax.AssignmentExpression,
-        esprima.Syntax.CallExpression,
+        esprima.Syntax.ArrowFunctionExpression,
     ]);
 
     public shouldKeepNode(node: ESTree.Node): boolean

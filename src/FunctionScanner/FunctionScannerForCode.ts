@@ -15,14 +15,14 @@ export class FunctionScannerForCode
         this.astNodeFilter = astNodeFilter;
     }
 
-    public async getPartialFunctionInfos(): Promise<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[]>
+    public async getPartialFunctionInfos(): Promise<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'>[]>
     {
         const esprimaForCode = new EsprimaForCode(this.code, this.astNodeFilter);
         const nodes = await esprimaForCode.getNodes();
-        const knownPartialFunctionInfosInCurrentCode: Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] = [];
+        const knownPartialFunctionInfosInCurrentCode: Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'>[] = [];
         for (const node of nodes)
         {
-            const nodeProcessor = new NodeProcessor(node, knownPartialFunctionInfosInCurrentCode);
+            const nodeProcessor = new NodeProcessor(node);
             const partialFunctionInfosFromNode = nodeProcessor.getPartialFunctionInfo();
             if (partialFunctionInfosFromNode !== null)
             {

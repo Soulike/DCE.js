@@ -24,8 +24,8 @@ export class FunctionScanner
         const functionScannerForCode = new FunctionScannerForCode(code, this.astNodeFilter);
         const partialFunctionInfos = await functionScannerForCode.getPartialFunctionInfos();
         return partialFunctionInfos.map(
-            ({name, startIndex, endIndex, bodyStartIndex, bodyEndIndex}) =>
-                new FunctionInfo(this.scriptFile, startIndex, endIndex, bodyStartIndex, bodyEndIndex, name),
+            ({startIndex, endIndex, bodyStartIndex, bodyEndIndex}) =>
+                new FunctionInfo(this.scriptFile, startIndex, endIndex, bodyStartIndex, bodyEndIndex),
         );
     }
 }

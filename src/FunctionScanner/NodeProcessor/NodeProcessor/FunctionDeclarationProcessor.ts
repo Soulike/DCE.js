@@ -12,17 +12,9 @@ export class FunctionDeclarationProcessor implements NodeProcessor
         this.functionDeclaration = functionDeclaration;
     }
 
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'>
     {
         const {functionDeclaration} = this;
-
-        const name = new Set<string>();
-        if (functionDeclaration.id === null)
-        {
-            throw new Error('Currently not supporting anonymous function declaration');
-        }
-        name.add(functionDeclaration.id.name);
-
         const {range, body: {range: bodyRange}} = functionDeclaration;
         if (range === undefined || bodyRange === undefined)
         {
@@ -35,7 +27,6 @@ export class FunctionDeclarationProcessor implements NodeProcessor
             endIndex,
             bodyStartIndex,
             bodyEndIndex,
-            name,
         };
     }
 }

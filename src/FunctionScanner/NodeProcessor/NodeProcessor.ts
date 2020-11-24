@@ -3,27 +3,23 @@ import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {NodeProcessor as INodeProcessor} from './Interface/NodeProcessor';
 import * as esprima from 'esprima';
 import {FunctionDeclarationProcessor} from './NodeProcessor/FunctionDeclarationProcessor';
-import {VariableDeclaratorProcessor} from './NodeProcessor/VariableDeclaratorProcessor';
-import {AssignmentExpressionProcessor} from './NodeProcessor/AssignmentExpressionProcessor';
-import {CallExpressionProcessor} from './NodeProcessor/CallExpressionProcessor';
+import {FunctionExpressionProcessor} from './NodeProcessor/FunctionExpressionProcessor';
 
 export class NodeProcessor implements INodeProcessor
 {
     private readonly node: ESTree.Node;
-    private readonly knownPartialFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>;
 
-    constructor(node: ESTree.Node, knownPartialFunctionInfos: Readonly<Readonly<Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>>[]>)
+    constructor(node: ESTree.Node)
     {
         this.node = node;
-        this.knownPartialFunctionInfos = knownPartialFunctionInfos;
     }
 
     /**
      * @description if need to add new processors, add them here. Remember to add the new node type to ASTNodeFilter.ts
      * */
-    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'> | Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex' | 'name'>[] | null
+    public getPartialFunctionInfo(): Pick<FunctionInfo, 'startIndex' | 'endIndex' | 'bodyStartIndex' | 'bodyEndIndex'> | null
     {
-        const {node, knownPartialFunctionInfos} = this;
+        const {node} = this;
         switch (node.type)
         {
             case esprima.Syntax.FunctionDeclaration:
@@ -31,19 +27,9 @@ export class NodeProcessor implements INodeProcessor
                 const processor = new FunctionDeclarationProcessor(node);
                 return processor.getPartialFunctionInfo();
             }
-            case esprima.Syntax.VariableDeclarator:
+            case esprima.Syntax.FunctionExpression:
             {
-                const processor = new VariableDeclaratorProcessor(node, knownPartialFunctionInfos);
-                return processor.getPartialFunctionInfo();
-            }
-            case esprima.Syntax.AssignmentExpression:
-            {
-                const processor = new AssignmentExpressionProcessor(node, knownPartialFunctionInfos);
-                return processor.getPartialFunctionInfo();
-            }
-            case esprima.Syntax.CallExpression:
-            {
-                const processor = new CallExpressionProcessor(node);
+                const processor = new FunctionExpressionProcessor(node);
                 return processor.getPartialFunctionInfo();
             }
             default:
