@@ -37,7 +37,14 @@ class ScriptFile
 }
 ```
 
-### [3. 所有函数识别](./FunctionScanner.md)
+### 3. JavaScript 文件预处理
+
+- 说明：对 JavaScript 文件中存在的 `new Function` 和 `eval` 进行替换处理
+- 输入：`ScriptFile[]`
+- 输出：对文件原地修改
+- 备注：无
+
+### [4. 所有函数识别](./FunctionScanner.md)
 
 - 说明：识别出文件夹下所有 JavaScript 文件中定义的函数
 - 输入：`ScriptFile[]`
@@ -57,7 +64,7 @@ class FunctionInfo
 }
 ```
 
-### 4. 静态函数调用识别
+### 5. 静态函数调用识别
 
 - 输入：`ScriptFile[]`
 - 输出：`FunctionCall[]`
@@ -72,26 +79,26 @@ class FunctionCall
 }
 ```
 
-### 5. 动态函数调用识别
+### 6. 动态函数调用识别
 
 - 输入：`ScriptFile[]`
 - 输出：`FunctionCall[]`
 - 备注：无
 
-### 6. 调用图合并
+### 7. 调用图合并
 
 - 输入：多个 `FunctionCall[]`
 - 输出：合并过的 `FunctionCall[]`
 - 备注：无
 
-### 7. 孤立结点识别
+### 8. 孤立结点识别
 
 - 输入：`FunctionCall` 实例，这个实例代表 `global`
 - 输出：`FunctionInfo[]`，其中包含所有孤立结点
 - 备注：
   - 孤立结点指从 `global` 不可达的结点
 
-### 8. 函数体删除
+### 9. 函数体删除
 
 - 输入：`FunctionInfo[]`，其中包含所有孤立结点
 - 输出：删除 `FunctionInfo` 实例中对应文件中函数的函数体
