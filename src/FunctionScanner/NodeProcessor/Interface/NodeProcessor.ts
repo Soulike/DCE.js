@@ -1,4 +1,4 @@
-import {FunctionInfo} from '../../DataClass/FunctionInfo';
+import {FunctionInfo} from '../../../DataClass/FunctionInfo';
 
 export interface NodeProcessor
 {

@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
-import {NodeProcessor as INodeProcessor} from '../Interface/NodeProcessor';
+import {NodeProcessor as INodeProcessor} from './Interface/NodeProcessor';
 import * as esprima from 'esprima';
 import {FunctionDeclarationProcessor} from './FunctionDeclarationProcessor';
 import {VariableDeclaratorProcessor} from './VariableDeclaratorProcessor';

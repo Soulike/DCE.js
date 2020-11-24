@@ -1,4 +1,4 @@
-import {NodeProcessor} from '../Interface/NodeProcessor';
+import {NodeProcessor} from './Interface/NodeProcessor';
 import * as ESTree from 'estree';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import * as esprima from 'esprima';

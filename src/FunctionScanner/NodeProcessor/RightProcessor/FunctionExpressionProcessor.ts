@@ -1,5 +1,5 @@
 import * as ESTree from 'estree';
-import {NodeProcessor} from '../../Interface/NodeProcessor';
+import {NodeProcessor} from '../Interface/NodeProcessor';
 import {FunctionInfo} from '../../../DataClass/FunctionInfo';
 import {throwRangeIsUndefinedException} from '../../Function';
 

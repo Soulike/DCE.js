@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 import {FunctionInfo} from '../../../DataClass/FunctionInfo';
-import {NodeProcessor} from '../../Interface/NodeProcessor';
+import {NodeProcessor} from '../Interface/NodeProcessor';
 
 export class IdentifierProcessor implements NodeProcessor
 {
