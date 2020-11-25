@@ -1,4 +1,5 @@
 import {ScriptFile} from './ScriptFile';
+import sha1 from 'crypto-js/sha1';
 
 export class FunctionInfo
 {
@@ -48,5 +49,23 @@ export class FunctionInfo
             || startIndex === null
             || bodyStartIndex === null
             || bodyEndIndex === null;
+    }
+
+    /**
+     * @description 获取其他类 FunctionInfo 对象的唯一哈希值
+     * */
+    public static getHash(functionInfo: Readonly<Pick<FunctionInfo, 'scriptFile' | 'startIndex' | 'endIndex'>>): string
+    {
+        const {scriptFile, startIndex, endIndex} = functionInfo;
+        return sha1(JSON.stringify({scriptFile, startIndex, endIndex})).toString();
+    }
+
+    /**
+     * @description 获取本对象的唯一哈希值
+     * */
+    public getHash(): string
+    {
+        const {scriptFile, startIndex, endIndex} = this;
+        return FunctionInfo.getHash({scriptFile, startIndex, endIndex});
     }
 }
