@@ -18,10 +18,13 @@ export class FileReplacer
 
     public async doProcess(): Promise<void>
     {
-        const {filePath} = this.scriptFile;
-        const fileContent = await fse.promises.readFile(filePath, this.encoding);
-        const stringReplacer = new StringReplacer(fileContent, this.replaceInfos);
-        const processedFileContent = stringReplacer.getReplacedString();
-        await fse.outputFile(filePath, processedFileContent, this.encoding);
+        if(this.replaceInfos.length > 0)
+        {
+            const {filePath} = this.scriptFile;
+            const fileContent = await fse.promises.readFile(filePath, this.encoding);
+            const stringReplacer = new StringReplacer(fileContent, this.replaceInfos);
+            const processedFileContent = stringReplacer.getReplacedString();
+            await fse.outputFile(filePath, processedFileContent, this.encoding);
+        }
     }
 }

@@ -15,4 +15,11 @@ describe(StringReplacer, () =>
         ]);
         expect(stringReplacer.getReplacedString()).toBe('1233553345686846878');
     });
+
+    it('should not modify string when no replaceInfo', function ()
+    {
+        const originalString = '0123456789';
+        const stringReplacer = new StringReplacer(originalString, []);
+        expect(stringReplacer.getReplacedString()).toBe(originalString);
+    });
 });

@@ -123,7 +123,7 @@ describe(FunctionConstructionProcessor, () =>
         expect(replaceInfo).not.toBeNull();
         if (replaceInfo !== null)
         {
-            expect(replaceInfo.range).toEqual(new Range(86, 126));
+            expect(replaceInfo.range).toEqual(new Range(21, 60));
             expect(replaceInfo.code.slice(0, 'function '.length)).toBe('function ');
             expect(replaceInfo.code.slice('function '.length + 5)).toBe('(a,b,c){return a+b+c}');
         }

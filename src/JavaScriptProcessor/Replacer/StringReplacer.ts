@@ -17,6 +17,10 @@ export class StringReplacer
 
     public getReplacedString(): string
     {
+        if (this.replaceInfos.length === 0)
+        {
+            return this.processedString;
+        }
         const stringBuffer: string[] = [];
         const {processedString, replaceInfos} = this;
         const sortedReplaceInfos = Array.from(replaceInfos)
