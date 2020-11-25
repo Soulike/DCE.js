@@ -4,20 +4,21 @@ import {FunctionCall} from '../../DataClass/FunctionCall';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {CallNode} from './Type/CallNode';
 import {ScriptFile} from '../../DataClass/ScriptFile';
+import {FunctionInfoMapConverter} from '../../FunctionInfoMapConverter';
 
 export class JSCallGraphConverter implements CallGraphBuilder
 {
     private readonly jsCallGraphResult: Readonly<CallGraph>;
-    private readonly functionInfoMap: Readonly<Map<string, FunctionInfo>>;
+    private readonly functionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly functionInfoMap: Map<string, FunctionInfo>;
 
-    /**
-     * @param jsCallGraphResult - call graph from js-callgraph
-     * @param functionInfoMap - a hash to FunctionInfo Map
-     * */
-    constructor(jsCallGraphResult: Readonly<CallGraph>, functionInfoMap: Readonly<Map<string, FunctionInfo>>)
+    constructor(jsCallGraphResult: Readonly<CallGraph>, functionInfos: Readonly<Readonly<FunctionInfo>[]>)
     {
         this.jsCallGraphResult = jsCallGraphResult;
-        this.functionInfoMap = functionInfoMap;
+        this.functionInfos = functionInfos;
+
+        const functionInfoMapConverter = new FunctionInfoMapConverter(this.functionInfos);
+        this.functionInfoMap = functionInfoMapConverter.getFunctionInfoMap();
     }
 
     public getCallGraph(): FunctionCall[]
@@ -44,8 +45,17 @@ export class JSCallGraphConverter implements CallGraphBuilder
 
     private getFunctionInfoFromCallNode(callNode: Readonly<CallNode>): FunctionInfo
     {
-        const {file, range: {start, end}} = callNode;
-        const hash = FunctionInfo.getHash({scriptFile: new ScriptFile(file), startIndex: start, endIndex: end});
+        const {label, file, range: {start, end}} = callNode;
+        let hash = '';
+        // TODO: 区分全局和名字叫 global 的函数
+        if (label === 'global')  // 'global' is set by js-callgraph
+        {
+            hash = FunctionInfo.getHash({scriptFile: null, startIndex: null, endIndex: null});
+        }
+        else
+        {
+            hash = FunctionInfo.getHash({scriptFile: new ScriptFile(file), startIndex: start, endIndex: end});
+        }
         const functionInfo = this.functionInfoMap.get(hash);
         if (functionInfo === undefined)
         {

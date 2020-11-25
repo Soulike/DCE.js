@@ -3,7 +3,6 @@ import {ScriptFile} from '../../DataClass/ScriptFile';
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {JSCallGraphConverter} from './JSCallGraphConverter';
-import {FunctionInfoMapConverter} from '../../FunctionInfoMapConverter';
 import {CallGraph} from './Type/CallGraph';
 
 const JCG = require('@persper/js-callgraph');
@@ -23,17 +22,18 @@ export class JSCallGraphWrapper implements CallGraphBuilder
     {
         const callGraphFromJSCallGraph = this.getJSCallGraphResult();
 
-        const functionInfoMapConverter = new FunctionInfoMapConverter(this.functionInfos);
-        const functionInfoMap = functionInfoMapConverter.getFunctionInfoMap();
-
-        const converter = new JSCallGraphConverter(callGraphFromJSCallGraph, functionInfoMap);
+        const converter = new JSCallGraphConverter(callGraphFromJSCallGraph, this.functionInfos);
         return converter.getCallGraph();
     }
 
     private getJSCallGraphResult(): CallGraph
     {
         const filePaths = this.scriptFiles.map(({filePath}) => filePath);
-        JCG.setArgs({cg: true});
+        JCG.setArgs({
+            cg: true,
+            output: null,
+            strategy: 'ONESHOT',
+        });
         JCG.setFiles(filePaths);
         JCG.setConsoleOutput(false);
         return JCG.build();
