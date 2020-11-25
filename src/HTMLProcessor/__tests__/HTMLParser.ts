@@ -78,6 +78,7 @@ describe(HTMLParser, () =>
                 break;
             }
         }
+        expect(extractedSrc).not.toBe('');
 
         const extractedScriptPath = path.join(tempDirectoryPath, extractedSrc);
         const extractedScriptContent = await fse.readFile(extractedScriptPath, 'utf-8');

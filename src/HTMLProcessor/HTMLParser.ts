@@ -21,6 +21,20 @@ export class HTMLParser
         this.htmlFilePath = htmlFilePath;
     }
 
+    private static isJavaScriptScriptTag(tag: HTMLScriptElement): boolean
+    {
+        const {type} = tag;
+        return type === 'text/javascript'
+            || type === 'application/javascript'
+            || type === ''
+            || type === undefined;
+    }
+
+    private static async getScriptTags(dom: jsdom.JSDOM)
+    {
+        return dom.window.document.getElementsByTagName('script');
+    }
+
     /**
      * @description replace inline <script> to external js and <script src="xxx">
      * @throws Error
@@ -38,8 +52,8 @@ export class HTMLParser
             for (let i = 0; i < scriptTags.length; i++)
             {
                 const tag = scriptTags[i];
-                const {src, innerHTML: scriptContent, type} = tag;
-                if ((src === undefined || src.length === 0) && type.toLowerCase() === 'text/javascript')
+                const {src, innerHTML: scriptContent} = tag;
+                if ((src === undefined || src.length === 0) && HTMLParser.isJavaScriptScriptTag(tag))
                 {
                     const scriptFilePath = await this.createScriptFile(scriptContent);
                     tag.innerHTML = '';
@@ -48,11 +62,6 @@ export class HTMLParser
             }
             await this.writeHtml(dom.serialize());
         }
-    }
-
-    private static async getScriptTags(dom: jsdom.JSDOM)
-    {
-        return dom.window.document.getElementsByTagName('script');
     }
 
     /**
