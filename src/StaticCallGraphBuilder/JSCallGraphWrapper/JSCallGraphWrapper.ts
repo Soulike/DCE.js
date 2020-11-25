@@ -3,6 +3,8 @@ import {ScriptFile} from '../../DataClass/ScriptFile';
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {JSCallGraphConverter} from './JSCallGraphConverter';
+import {FunctionInfoMapConverter} from '../../FunctionInfoMapConverter';
+import {CallGraph} from './Type/CallGraph';
 
 const JCG = require('@persper/js-callgraph');
 
@@ -19,24 +21,21 @@ export class JSCallGraphWrapper implements CallGraphBuilder
 
     public getCallGraph(): FunctionCall[]
     {
-        const filePaths = this.scriptFiles.map(({filePath}) => filePath);
-        JCG.setArgs({cg: true});
-        JCG.setFiles(filePaths);
-        JCG.setConsoleOutput(false);
-        const callGraphFromJSCallGraph = JCG.build();
-        const functionInfoMap = this.getFunctionInfoMap();
+        const callGraphFromJSCallGraph = this.getJSCallGraphResult();
+
+        const functionInfoMapConverter = new FunctionInfoMapConverter(this.functionInfos);
+        const functionInfoMap = functionInfoMapConverter.getFunctionInfoMap();
+
         const converter = new JSCallGraphConverter(callGraphFromJSCallGraph, functionInfoMap);
         return converter.getCallGraph();
     }
 
-    private getFunctionInfoMap(): Map<string, FunctionInfo>
+    private getJSCallGraphResult(): CallGraph
     {
-        const {functionInfos} = this;
-        const functionInfoMap = new Map<string, FunctionInfo>();
-        functionInfos.forEach(functionInfo =>
-        {
-            functionInfoMap.set(functionInfo.getHash(), functionInfo);
-        });
-        return functionInfoMap;
+        const filePaths = this.scriptFiles.map(({filePath}) => filePath);
+        JCG.setArgs({cg: true});
+        JCG.setFiles(filePaths);
+        JCG.setConsoleOutput(false);
+        return JCG.build();
     }
 }
