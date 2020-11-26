@@ -2,10 +2,8 @@ import {CallGraphBuilder} from '../../Interface/CallGraphBuilder';
 import {ScriptFile} from '../../DataClass/ScriptFile';
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
-import {JSCallGraphConverter} from './JSCallGraphConverter';
-import {CallGraph} from './Type/CallGraph';
-
-const JCG = require('@persper/js-callgraph');
+import {JSCallGraphResultToFunctionCallsConverter} from './JSCallGraphResultToFunctionCallsConverter';
+import {JSCallGraphResultBuilder} from './JSCallGraphResultBuilder';
 
 export class JSCallGraphWrapper implements CallGraphBuilder
 {
@@ -18,24 +16,12 @@ export class JSCallGraphWrapper implements CallGraphBuilder
         this.functionInfos = functionInfos;
     }
 
-    public getCallGraph(): FunctionCall[]
+    public async getCallGraph(): Promise<FunctionCall[]>
     {
-        const callGraphFromJSCallGraph = this.getJSCallGraphResult();
+        const jsCallGraphResultBuilder = new JSCallGraphResultBuilder(this.scriptFiles);
+        const jsCallGraphResult = jsCallGraphResultBuilder.getJSCallGraphResult();
 
-        const converter = new JSCallGraphConverter(callGraphFromJSCallGraph, this.functionInfos);
-        return converter.getCallGraph();
-    }
-
-    private getJSCallGraphResult(): CallGraph
-    {
-        const filePaths = this.scriptFiles.map(({filePath}) => filePath);
-        JCG.setArgs({
-            cg: true,
-            output: null,
-            strategy: 'ONESHOT',
-        });
-        JCG.setFiles(filePaths);
-        JCG.setConsoleOutput(false);
-        return JCG.build();
+        const converter = new JSCallGraphResultToFunctionCallsConverter(jsCallGraphResult, this.functionInfos);
+        return converter.getFunctionCalls();
     }
 }
