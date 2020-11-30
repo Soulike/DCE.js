@@ -20,6 +20,11 @@ export class RowColumnToIndexConverter
 
     public async getIndex(rowNumber: number, columnNumber: number): Promise<number>
     {
+        if (rowNumber < 1 || columnNumber < 1
+            || !Number.isInteger(rowNumber) || !Number.isInteger(columnNumber))
+        {
+            throw new Error(`rowNumber and columnNumber should be positive integers`);
+        }
         if (this.fileContentLines === null)
         {
             await this.readFileContentLines();
