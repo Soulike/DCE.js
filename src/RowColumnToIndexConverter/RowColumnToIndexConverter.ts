@@ -35,7 +35,7 @@ export class RowColumnToIndexConverter
         {
             throw new Error(`non-existent row number ${rowNumber} for file ${this.scriptFile.filePath}`);
         }
-        if (columnNumber > fileContentLines[rowNumber - 1].length + 1)   // +1 for '\n' consumed in split()
+        if (columnNumber > this.getRowLength(rowNumber))
         {
             throw new Error(`non-existent column number ${columnNumber} for file ${this.scriptFile.filePath}`);
         }
@@ -57,5 +57,22 @@ export class RowColumnToIndexConverter
             throw new Error(`file ${filePath} is empty`);
         }
         this.fileContentLines = fileContent.split('\n');
+    }
+
+    private getRowLength(rowNumber: number): number
+    {
+        if (this.fileContentLines === null)
+        {
+            throw new Error(`fileContentLines should not be null`);
+        }
+        const lineAmount = this.fileContentLines.length;
+        if (rowNumber === lineAmount)   // no tailing \n
+        {
+            return this.fileContentLines[rowNumber - 1].length;
+        }
+        else
+        {
+            return this.fileContentLines[rowNumber - 1].length + 1; // +1 for '\n' consumed in split()
+        }
     }
 }
