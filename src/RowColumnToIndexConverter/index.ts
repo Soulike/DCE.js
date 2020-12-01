@@ -1,1 +1,2 @@
-export * from './RowColumnToIndexConverter';
+export * from './FileRowColumnToIndexConverter';
+export * from './CodeRowColumnToIndexConverter';
