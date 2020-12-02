@@ -35,12 +35,12 @@ export class Jalangi2Wrapper
             const cp = childProcess.spawn(
                 'node', [
                     path.join(jalangi2Path, 'src', 'js', 'commands', 'instrument.js'),
-                    '--inlineIID', '--inlineSource', '--inlineJalangi', '-i',
+                    '--inlineIID', '--inlineSource', '--inlineJalangi', '-i', '-d',
                     '--analysis', path.join(jalangi2Path, 'src', 'js', 'sample_analyses', 'ChainedAnalyses.js'),
                     ...Jalangi2Wrapper.getAnalysisParameters(),
                     '--outputDir', tempDir,
                     this.directoryPath], {cwd: __dirname, shell: true});
-            cp.on('exit', () => resolve(tempDir));
+            cp.on('exit', () => resolve(path.join(tempDir)));
             cp.on('error', (e) => reject(e));
         });
     }
