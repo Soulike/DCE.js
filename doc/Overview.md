@@ -64,7 +64,7 @@ class FunctionInfo
 }
 ```
 
-### 5. 静态函数调用识别
+### [5. 静态函数调用识别](./StaticCallGraphBuilder.md)
 
 - 输入：`ScriptFile[]`
 - 输出：`FunctionCall[]`
@@ -79,7 +79,7 @@ class FunctionCall
 }
 ```
 
-### 6. 动态函数调用识别
+### [6. 动态函数调用识别](./DynamicCallGraphBuilder.md)
 
 - 输入：`ScriptFile[]`
 - 输出：`FunctionCall[]`
