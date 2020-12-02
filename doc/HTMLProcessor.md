@@ -6,7 +6,7 @@
 
 ## 模块划分
 
-### HTMLScanner
+### HTMLFileScanner
 
 扫描指定的文件夹，输出所有 HTML 文件的相对路径。
 

@@ -1,6 +1,6 @@
-import {FileScanner} from '../FileScanner';
+import {FileScanner} from './FileScanner';
 
-export class HTMLScanner extends FileScanner
+export class HTMLFileScanner extends FileScanner
 {
     constructor(directoryPath: string)
     {
