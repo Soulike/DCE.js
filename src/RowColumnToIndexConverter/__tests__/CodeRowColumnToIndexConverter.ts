@@ -48,25 +48,25 @@ describe(CodeRowColumnToIndexConverter, () =>
     it('should handle string having only one \\n', async function ()
     {
         const converter = new CodeRowColumnToIndexConverter('\n');
-        expect(converter.getIndex(1, 1)).toBe(1);
+        expect(converter.getIndex(1, 1)).toBe(0);
     });
 
     it('should handle string having only \\n', async function ()
     {
         const converter = new CodeRowColumnToIndexConverter('\n\n\n\n\n');
-        expect(converter.getIndex(5, 1)).toBe(5);
+        expect(converter.getIndex(5, 1)).toBe(4);
     });
 
     it('should handle string in one line', async function ()
     {
         const converter = new CodeRowColumnToIndexConverter(cryptoRandomString({length: 10}));
-        expect(converter.getIndex(1, 5)).toBe(5);
+        expect(converter.getIndex(1, 5)).toBe(4);
     });
 
     it('should handle string in multiple lines', async function ()
     {
         const converter = new CodeRowColumnToIndexConverter(`${cryptoRandomString({length: 10})}\n${cryptoRandomString({length: 3})}\n${cryptoRandomString({length: 5})}`);
-        expect(converter.getIndex(2, 2)).toBe(13);
+        expect(converter.getIndex(2, 2)).toBe(12);
     });
 
     it('should handle row number out of range', async function ()
@@ -84,12 +84,12 @@ describe(CodeRowColumnToIndexConverter, () =>
     it('should handle \\r\\n', async function ()
     {
         const converter = new CodeRowColumnToIndexConverter(`${cryptoRandomString({length: 10})}\r\n${cryptoRandomString({length: 3})}\r\n${cryptoRandomString({length: 5})}`);
-        expect(converter.getIndex(2, 2)).toBe(14);
+        expect(converter.getIndex(2, 2)).toBe(13);
     });
 
     it('should handle tailing \\n', async function ()
     {
         const converter = new CodeRowColumnToIndexConverter(`${cryptoRandomString({length: 10})}\n${cryptoRandomString({length: 3})}\n${cryptoRandomString({length: 5})}\n`);
-        expect(converter.getIndex(3, 6)).toBe(21);
+        expect(converter.getIndex(3, 6)).toBe(20);
     });
 });

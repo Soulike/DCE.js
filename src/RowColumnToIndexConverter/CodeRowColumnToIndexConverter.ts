@@ -28,7 +28,7 @@ export class CodeRowColumnToIndexConverter
         {
             index += fileContentLines[i].length + 1;  // +1 for '\n' consumed in split()
         }
-        index += columnNumber;
+        index += columnNumber - 1;
         return index;
     }
 
