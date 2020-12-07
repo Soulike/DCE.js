@@ -38,16 +38,25 @@ export class SimpleToHashFunctionCallConverter
     private async convertPartialFunctionInfoToHash(partialFunctionInfo: Readonly<PartialFunctionInfo>): Promise<string>
     {
         const {scriptFilePath, startRowNumber, startColumnNumber, endRowNumber, endColumnNumber} = partialFunctionInfo;
-        const fileContent = await this.getFileContent(scriptFilePath);
-        const rowColumnToIndexConverter = new CodeRowColumnToIndexConverter(fileContent);
-        const [startIndex, endIndex] = await Promise.all([
-            rowColumnToIndexConverter.getIndex(startRowNumber, startColumnNumber),
-            rowColumnToIndexConverter.getIndex(endRowNumber, endColumnNumber),
-        ]);
-        return FunctionInfo.getHash({
-            scriptFile: new ScriptFile(scriptFilePath),
-            startIndex, endIndex,
-        });
+        if (scriptFilePath !== null && startRowNumber !== null && startColumnNumber !== null && endRowNumber !== null && endColumnNumber !== null)
+        {
+            const fileContent = await this.getFileContent(scriptFilePath);
+            const rowColumnToIndexConverter = new CodeRowColumnToIndexConverter(fileContent);
+            const [startIndex, endIndex] = await Promise.all([
+                rowColumnToIndexConverter.getIndex(startRowNumber, startColumnNumber),
+                rowColumnToIndexConverter.getIndex(endRowNumber, endColumnNumber),
+            ]);
+            return FunctionInfo.getHash({
+                scriptFile: new ScriptFile(scriptFilePath),
+                startIndex, endIndex,
+            });
+        }
+        else    // global
+        {
+            return FunctionInfo.getHash({
+                scriptFile: null, startIndex: null, endIndex: null,
+            });
+        }
     }
 
     private async getFileContent(filePath: string): Promise<string>

@@ -4,12 +4,23 @@ function CallAnalysis()
      * @type SimpleFunctionCall[]
      * */
     const simpleFunctionCalls = [];
+    let functionIIDStack = [null];  // null for global
 
-    this.invokeFun = function (iid, f, base, args, result, isConstructor, isMethod, functionIid, functionSid)
+    this.functionEnter = function (iid, _f, _dis, _args)
+    {
+        functionIIDStack.push(iid);
+    };
+
+    this.functionExit = function (_iid, _returnVal, _wrappedExceptionVal)
+    {
+        functionIIDStack.pop();
+    };
+
+    this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid)
     {
         if (functionSid !== undefined && functionIid !== undefined)  // undefined if it's native method
         {
-            const sourcePartialFunctionInfo = getSourcePartialFunctionInfo(iid);
+            const sourcePartialFunctionInfo = getSourcePartialFunctionInfo(functionIIDStack[functionIIDStack.length - 1]);
             const targetPartialFunctionInfo = getTargetSimpleFunctionCall(functionIid, functionSid);
             simpleFunctionCalls.push({
                 caller: sourcePartialFunctionInfo,
@@ -30,30 +41,19 @@ function CallAnalysis()
     {
         const iids = J$.smap[J$.sid];
         const {originalCodeFileName} = iids;
-        const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[iid];
-        return {
-            scriptFilePath: originalCodeFileName,
-            startRowNumber: beginLineNumber,
-            startColumnNumber: beginColumnNumber,
-            endRowNumber: endLineNumber,
-            endColumnNumber: endColumnNumber,
-        };
-    }
-
-    /**
-     * @returns PartialFunctionInfo
-     * */
-    function getTargetSimpleFunctionCall(functionIid, functionSid)
-    {
-        if (functionSid === J$.sid) // in the same file
+        if (iid === null)    // global
         {
-            return getSourcePartialFunctionInfo(functionIid);
+            return {
+                scriptFilePath: null,
+                startRowNumber: null,
+                startColumnNumber: null,
+                endRowNumber: null,
+                endColumnNumber: null,
+            };
         }
         else
         {
-            const iids = J$.smap[functionSid];
-            const {originalCodeFileName} = iids;
-            const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[functionIid];
+            const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[iid];
             return {
                 scriptFilePath: originalCodeFileName,
                 startRowNumber: beginLineNumber,
@@ -62,6 +62,23 @@ function CallAnalysis()
                 endColumnNumber: endColumnNumber,
             };
         }
+    }
+
+    /**
+     * @returns PartialFunctionInfo
+     * */
+    function getTargetSimpleFunctionCall(functionIid, functionSid)
+    {
+        const iids = J$.smap[functionSid];
+        const {originalCodeFileName} = iids;
+        const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[functionIid];
+        return {
+            scriptFilePath: originalCodeFileName,
+            startRowNumber: beginLineNumber,
+            startColumnNumber: beginColumnNumber,
+            endRowNumber: endLineNumber,
+            endColumnNumber: endColumnNumber,
+        };
     }
 }
 

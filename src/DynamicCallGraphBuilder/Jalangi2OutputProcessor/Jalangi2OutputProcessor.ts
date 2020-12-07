@@ -36,12 +36,18 @@ export class Jalangi2OutputProcessor
         const {caller, callee} = originalSimpleFunctionCall;
         const [newCaller, newCallee]: [PartialFunctionInfo, PartialFunctionInfo] = [{...caller}, {...callee}];
 
-        newCaller.scriptFilePath = path.join(this.originalDirectoryPath,
-            Jalangi2OutputProcessor.recoverJalangi2FileName(path.relative(this.instrumentedFileDirectoryPath, caller.scriptFilePath)),
-        );
-        newCallee.scriptFilePath = path.join(this.originalDirectoryPath,
-            Jalangi2OutputProcessor.recoverJalangi2FileName(path.relative(this.instrumentedFileDirectoryPath, callee.scriptFilePath)),
-        );
+        if (caller.scriptFilePath !== null)
+        {
+            newCaller.scriptFilePath = path.join(this.originalDirectoryPath,
+                Jalangi2OutputProcessor.recoverJalangi2FileName(path.relative(this.instrumentedFileDirectoryPath, caller.scriptFilePath)),
+            );
+        }
+        if (callee.scriptFilePath !== null)
+        {
+            newCallee.scriptFilePath = path.join(this.originalDirectoryPath,
+                Jalangi2OutputProcessor.recoverJalangi2FileName(path.relative(this.instrumentedFileDirectoryPath, callee.scriptFilePath)),
+            );
+        }
 
         return {
             caller: newCaller,

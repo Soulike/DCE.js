@@ -1,11 +1,11 @@
 // used by CallAnalysis.js
 export interface PartialFunctionInfo
 {
-    scriptFilePath: string;
-    startRowNumber: number;
-    startColumnNumber: number;
-    endRowNumber: number;
-    endColumnNumber: number;
+    scriptFilePath: string | null;
+    startRowNumber: number | null;
+    startColumnNumber: number | null;
+    endRowNumber: number | null;
+    endColumnNumber: number | null;
 }
 
 export interface SimpleFunctionCall
