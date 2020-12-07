@@ -7,6 +7,9 @@ import {FunctionInfo} from '../../DataClass/FunctionInfo';
 
 export class SimpleToHashFunctionCallConverter
 {
+    /**
+     * @description processing multiple simpleFunctionCalls at one time enables us to cache files. see getFileContent()
+     * */
     private readonly simpleFunctionCalls: Readonly<Readonly<SimpleFunctionCall>[]>;
     private readonly filePathToCode: Map<string, string>; // filePath to code
     private readonly sourceCodeEncoding: BufferEncoding;
