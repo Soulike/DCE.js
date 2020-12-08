@@ -2,7 +2,7 @@ import {CallGraphBuilder} from '../../Interface/CallGraphBuilder';
 import {SimpleFunctionCall} from '../Interface';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {FunctionCall} from '../../DataClass/FunctionCall';
-import {SimpleToHashFunctionCallConverter} from './SimpleToHashFunctionCallConverter';
+import {SimpleFunctionCallsToSingleHashFunctionCallsConverter} from './SimpleFunctionCallsToSingleHashFunctionCallsConverter';
 import {HashFunctionCall} from '../../DataClass/HashFunctionCall';
 import {HashFunctionCallsToFunctionCallsConverter} from '../../HashFunctionCallsToFunctionCallsConverter';
 
@@ -28,8 +28,8 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
 
     private async getMergedHashFunctionCalls(): Promise<HashFunctionCall[]>
     {
-        const simpleToHashFunctionCallConverter = new SimpleToHashFunctionCallConverter(this.simpleFunctionCalls, this.sourceCodeEncoding);
-        const unmergedHashFunctionCalls = await simpleToHashFunctionCallConverter.getHashFunctionCalls();
+        const simpleFunctionCallsToSingleHashFunctionCallsConverter = new SimpleFunctionCallsToSingleHashFunctionCallsConverter(this.simpleFunctionCalls, this.sourceCodeEncoding);
+        const unmergedHashFunctionCalls = await simpleFunctionCallsToSingleHashFunctionCallsConverter.getSingleHashFunctionCalls();
         const callerHashToCalleeHashes: Map<string, Set<string>> = new Map();    // 'hash of caller' to 'hashes of callee'
         unmergedHashFunctionCalls.forEach(({callerHash, calleeHash}) =>
         {

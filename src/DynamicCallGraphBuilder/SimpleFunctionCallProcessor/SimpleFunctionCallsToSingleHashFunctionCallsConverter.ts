@@ -5,7 +5,7 @@ import {CodeRowColumnToIndexConverter} from '../../RowColumnToIndexConverter';
 import fse from 'fs-extra';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 
-export class SimpleToHashFunctionCallConverter
+export class SimpleFunctionCallsToSingleHashFunctionCallsConverter
 {
     /**
      * @description processing multiple simpleFunctionCalls at one time enables us to cache files. see getFileContent()
@@ -21,7 +21,7 @@ export class SimpleToHashFunctionCallConverter
         this.sourceCodeEncoding = sourceCodeEncoding;
     }
 
-    public async getHashFunctionCalls(): Promise<SingleHashFunctionCall[]>
+    public async getSingleHashFunctionCalls(): Promise<SingleHashFunctionCall[]>
     {
         const {simpleFunctionCalls} = this;
         return await Promise.all(simpleFunctionCalls.map(
