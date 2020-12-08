@@ -23,9 +23,9 @@ export class DynamicCallGraphBuilder implements CallGraphBuilder
     public async getCallGraph(): Promise<FunctionCall[]>
     {
         const jalangi2Wrapper = new Jalangi2Wrapper(this.directoryPath);
-        const instrumentedFilePath = await jalangi2Wrapper.getInstrumentedFilePath();
+        const instrumentedFilesDirectoryPath = await jalangi2Wrapper.getInstrumentedFilesDirectoryPath();
 
-        const htmlFileScanner = new HTMLFileScanner(instrumentedFilePath);
+        const htmlFileScanner = new HTMLFileScanner(instrumentedFilesDirectoryPath);
         const htmlFilePaths = await htmlFileScanner.getFilePaths();
 
         const callGraphsPerHTMLFile = await Promise.all(htmlFilePaths.map(async filePath =>
@@ -33,7 +33,7 @@ export class DynamicCallGraphBuilder implements CallGraphBuilder
             const puppeteerWrapper = new PuppeteerWrapper(filePath);
             const simpleFunctionCalls = await puppeteerWrapper.getSimpleFunctionCalls();
 
-            const jalangi2OutputProcessor = new Jalangi2OutputProcessor(this.directoryPath, instrumentedFilePath, simpleFunctionCalls);
+            const jalangi2OutputProcessor = new Jalangi2OutputProcessor(this.directoryPath, instrumentedFilesDirectoryPath, simpleFunctionCalls);
             const processedSimpleFunctionCalls = jalangi2OutputProcessor.getProcessedSimpleFunctionCalls();
 
             const simpleFunctionCallProcessor = new SimpleFunctionCallProcessor(processedSimpleFunctionCalls, this.functionInfos, this.encoding);

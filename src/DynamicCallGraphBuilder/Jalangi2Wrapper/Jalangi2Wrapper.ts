@@ -26,7 +26,7 @@ export class Jalangi2Wrapper
         return stringBuffer;
     }
 
-    public async getInstrumentedFilePath(): Promise<string>
+    public async getInstrumentedFilesDirectoryPath(): Promise<string>
     {
         const tempDir = await createTempDirectory();
         const jalangi2Path = path.join(__dirname, '..', '..', '..', 'node_modules', 'jalangi2');
