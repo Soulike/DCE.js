@@ -1,4 +1,4 @@
-import {HTMLScanner} from './HTMLScanner';
+import {HTMLFileScanner} from '../HTMLFileScanner';
 import {HTMLParser} from './HTMLParser';
 
 /**
@@ -7,11 +7,11 @@ import {HTMLParser} from './HTMLParser';
  * */
 export class HTMLProcessor
 {
-    private readonly htmlScanner: HTMLScanner;
+    private readonly htmlScanner: HTMLFileScanner;
 
     constructor(directoryPath: string)
     {
-        this.htmlScanner = new HTMLScanner(directoryPath);
+        this.htmlScanner = new HTMLFileScanner(directoryPath);
     }
 
     public async doProcess(): Promise<void>

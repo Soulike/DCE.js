@@ -88,7 +88,7 @@ describe(HTMLParser, () =>
     it('should not modify other content outside <script>', async function ()
     {
         const newDom = await getProcessedDom();
-        const divs = [...newDom.window.document.body.getElementsByTagName('div')];
+        const divs = Array.from(newDom.window.document.body.getElementsByTagName('div'));
         expect(divs.length).toBe(1);
         expect(divs[0].innerHTML).toBe(divText);
     });
@@ -129,6 +129,6 @@ describe(HTMLParser, () =>
 
     function getScriptTags(dom: jsdom.JSDOM)
     {
-        return [...dom.window.document.getElementsByTagName('script')];
+        return Array.from(dom.window.document.getElementsByTagName('script'));
     }
 });
