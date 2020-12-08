@@ -35,7 +35,7 @@ export class Jalangi2Wrapper
             const cp = childProcess.spawn(
                 'node', [
                     path.join(jalangi2Path, 'src', 'js', 'commands', 'instrument.js'),
-                    '--inlineIID', '--inlineSource', '--inlineJalangi', '-i', '-d',
+                    '--inlineIID', '--inlineJalangi', '-d',
                     '--analysis', path.join(jalangi2Path, 'src', 'js', 'sample_analyses', 'ChainedAnalyses.js'),
                     ...Jalangi2Wrapper.getAnalysisParameters(),
                     '--outputDir', tempDir,
