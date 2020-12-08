@@ -1,22 +1,21 @@
 import {CallGraphBuilder} from '../../Interface/CallGraphBuilder';
 import {SimpleFunctionCall} from '../Interface';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
-import {FunctionInfoMapConverter} from '../../FunctionInfoMapConverter';
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {SimpleToHashFunctionCallConverter} from './SimpleToHashFunctionCallConverter';
 import {HashFunctionCall} from '../../DataClass/HashFunctionCall';
+import {HashFunctionCallToFunctionCallConverter} from '../../HashFunctionCallToFunctionCallConverter';
 
 export class SimpleFunctionCallProcessor implements CallGraphBuilder
 {
     private readonly simpleFunctionCalls: Readonly<Readonly<SimpleFunctionCall>[]>;
-    private readonly hashToFunctionInfo: Map<string, FunctionInfo>;
+    private readonly functionInfos: Readonly<Readonly<FunctionInfo>[]>;
     private readonly sourceCodeEncoding: BufferEncoding;
 
     constructor(simpleFunctionCalls: Readonly<Readonly<SimpleFunctionCall>[]>, functionInfos: Readonly<Readonly<FunctionInfo>[]>, sourceCodeEncoding: BufferEncoding = 'utf-8')
     {
         this.simpleFunctionCalls = simpleFunctionCalls;
-        const converter = new FunctionInfoMapConverter(functionInfos);
-        this.hashToFunctionInfo = converter.getFunctionInfoMap();
+        this.functionInfos = functionInfos;
         this.sourceCodeEncoding = sourceCodeEncoding;
     }
 
@@ -68,21 +67,7 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
      * */
     private convertMergedHashFunctionCallToFunctionCall(mergedHashFunctionCall: HashFunctionCall): FunctionCall | null
     {
-        const {callerHash, calleeHashes} = mergedHashFunctionCall;
-        const caller = this.hashToFunctionInfo.get(callerHash);
-        if (caller === undefined)
-        {
-            return null;
-        }
-        const callees: FunctionInfo[] = [];
-        calleeHashes.forEach(hash =>
-        {
-            const callee = this.hashToFunctionInfo.get(hash);
-            if (callee !== undefined)    // ignore callee that was not found in previous steps
-            {
-                callees.push(callee);
-            }
-        });
-        return new FunctionCall(caller, callees);
+        const hashFunctionCallToFunctionCallConverter = new HashFunctionCallToFunctionCallConverter(mergedHashFunctionCall, this.functionInfos);
+        return hashFunctionCallToFunctionCallConverter.getFunctionCall();
     }
 }
