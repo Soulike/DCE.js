@@ -1,11 +1,11 @@
 import {PartialFunctionInfo, SimpleFunctionCall} from '../Interface';
-import {HashFunctionCall} from './HashFunctionCall';
+import {SingleHashFunctionCall} from './SingleHashFunctionCall';
 import {ScriptFile} from '../../DataClass/ScriptFile';
 import {CodeRowColumnToIndexConverter} from '../../RowColumnToIndexConverter';
 import fse from 'fs-extra';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 
-export class SimpleToHashFunctionCallConverter
+export class SimpleFunctionCallsToSingleHashFunctionCallsConverter
 {
     /**
      * @description processing multiple simpleFunctionCalls at one time enables us to cache files. see getFileContent()
@@ -21,7 +21,7 @@ export class SimpleToHashFunctionCallConverter
         this.sourceCodeEncoding = sourceCodeEncoding;
     }
 
-    public async getHashFunctionCalls(): Promise<HashFunctionCall[]>
+    public async getSingleHashFunctionCalls(): Promise<SingleHashFunctionCall[]>
     {
         const {simpleFunctionCalls} = this;
         return await Promise.all(simpleFunctionCalls.map(
@@ -31,7 +31,7 @@ export class SimpleToHashFunctionCallConverter
                     this.convertPartialFunctionInfoToHash(caller),
                     this.convertPartialFunctionInfoToHash(callee),
                 ]);
-                return new HashFunctionCall(callerHash, calleeHash);
+                return new SingleHashFunctionCall(callerHash, calleeHash);
             }));
     }
 
