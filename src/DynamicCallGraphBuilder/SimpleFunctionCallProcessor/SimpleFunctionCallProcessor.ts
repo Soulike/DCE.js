@@ -4,7 +4,7 @@ import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {FunctionInfoMapConverter} from '../../FunctionInfoMapConverter';
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {SimpleToHashFunctionCallConverter} from './SimpleToHashFunctionCallConverter';
-import {MergedHashFunctionCall} from './HashFunctionCall';
+import {HashFunctionCall} from '../../DataClass/HashFunctionCall';
 
 export class SimpleFunctionCallProcessor implements CallGraphBuilder
 {
@@ -35,7 +35,7 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
         return functionCalls;
     }
 
-    private async getMergedHashFunctionCalls(): Promise<MergedHashFunctionCall[]>
+    private async getMergedHashFunctionCalls(): Promise<HashFunctionCall[]>
     {
         const simpleToHashFunctionCallConverter = new SimpleToHashFunctionCallConverter(this.simpleFunctionCalls, this.sourceCodeEncoding);
         const unmergedHashFunctionCalls = await simpleToHashFunctionCallConverter.getHashFunctionCalls();
@@ -55,10 +55,10 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
                 }
             }
         });
-        const mergedHashFunctionCalls: MergedHashFunctionCall[] = [];
+        const mergedHashFunctionCalls: HashFunctionCall[] = [];
         callerHashToCalleeHashes.forEach((calleeHashes, callerHash) =>
         {
-            mergedHashFunctionCalls.push(new MergedHashFunctionCall(callerHash, Array.from(calleeHashes)));
+            mergedHashFunctionCalls.push(new HashFunctionCall(callerHash, Array.from(calleeHashes)));
         });
         return mergedHashFunctionCalls;
     }
@@ -66,7 +66,7 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
     /**
      * @return return null if caller FunctionInfo was not found in previous steps
      * */
-    private convertMergedHashFunctionCallToFunctionCall(mergedHashFunctionCall: MergedHashFunctionCall): FunctionCall | null
+    private convertMergedHashFunctionCallToFunctionCall(mergedHashFunctionCall: HashFunctionCall): FunctionCall | null
     {
         const {callerHash, calleeHashes} = mergedHashFunctionCall;
         const caller = this.hashToFunctionInfo.get(callerHash);
