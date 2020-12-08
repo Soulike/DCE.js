@@ -3,24 +3,29 @@ import {FunctionCall} from '../DataClass/FunctionCall';
 import {FunctionInfo} from '../DataClass/FunctionInfo';
 import {FunctionInfoMapConverter} from '../FunctionInfoMapConverter';
 
-export class HashFunctionCallToFunctionCallConverter
+export class HashFunctionCallsToFunctionCallsConverter
 {
-    private readonly hashFunctionCall: Readonly<HashFunctionCall>;
+    private readonly hashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>;
     private readonly hashToFunctionInfo: Map<string, Readonly<FunctionInfo>>;
 
-    constructor(hashFunctionCall: Readonly<HashFunctionCall>, functionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(hashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>, functionInfos: Readonly<Readonly<FunctionInfo>[]>)
     {
-        this.hashFunctionCall = hashFunctionCall;
+        this.hashFunctionCalls = hashFunctionCalls;
         const functionInfoMapConverter = new FunctionInfoMapConverter(functionInfos);
         this.hashToFunctionInfo = functionInfoMapConverter.getFunctionInfoMap();
+    }
+
+    public getFunctionCalls(): (FunctionCall | null)[]
+    {
+        return this.hashFunctionCalls.map(hashFunctionCall => this.getFunctionCall(hashFunctionCall));
     }
 
     /**
      * @return return null if caller FunctionInfo was not found in functionInfos
      * */
-    public getFunctionCall(): FunctionCall | null
+    private getFunctionCall(hashFunctionCall: HashFunctionCall): FunctionCall | null
     {
-        const {callerHash, calleeHashes} = this.hashFunctionCall;
+        const {callerHash, calleeHashes} = hashFunctionCall;
         const caller = this.hashToFunctionInfo.get(callerHash);
         if (caller === undefined)
         {

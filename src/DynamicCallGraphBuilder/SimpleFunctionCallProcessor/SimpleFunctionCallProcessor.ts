@@ -4,7 +4,7 @@ import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {SimpleToHashFunctionCallConverter} from './SimpleToHashFunctionCallConverter';
 import {HashFunctionCall} from '../../DataClass/HashFunctionCall';
-import {HashFunctionCallToFunctionCallConverter} from '../../HashFunctionCallToFunctionCallConverter';
+import {HashFunctionCallsToFunctionCallsConverter} from '../../HashFunctionCallsToFunctionCallsConverter';
 
 export class SimpleFunctionCallProcessor implements CallGraphBuilder
 {
@@ -22,16 +22,8 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
     public async getCallGraph(): Promise<FunctionCall[]>
     {
         const mergedHashFunctionCalls = await this.getMergedHashFunctionCalls();
-        const functionCalls: FunctionCall[] = [];
-        mergedHashFunctionCalls.forEach(mergedHashFunctionCall =>
-        {
-            const functionCall = this.convertMergedHashFunctionCallToFunctionCall(mergedHashFunctionCall);
-            if (functionCall !== null)
-            {
-                functionCalls.push(functionCall);
-            }
-        });
-        return functionCalls;
+        const functionCallsWithNulls: (FunctionCall | null)[] = this.convertMergedHashFunctionCallsToFunctionCalls(mergedHashFunctionCalls);
+        return functionCallsWithNulls.filter(value => value !== null) as FunctionCall[];    // ignore nulls
     }
 
     private async getMergedHashFunctionCalls(): Promise<HashFunctionCall[]>
@@ -65,9 +57,9 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
     /**
      * @return return null if caller FunctionInfo was not found in previous steps
      * */
-    private convertMergedHashFunctionCallToFunctionCall(mergedHashFunctionCall: HashFunctionCall): FunctionCall | null
+    private convertMergedHashFunctionCallsToFunctionCalls(mergedHashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>): (FunctionCall | null)[]
     {
-        const hashFunctionCallToFunctionCallConverter = new HashFunctionCallToFunctionCallConverter(mergedHashFunctionCall, this.functionInfos);
-        return hashFunctionCallToFunctionCallConverter.getFunctionCall();
+        const hashFunctionCallsToFunctionCallsConverter = new HashFunctionCallsToFunctionCallsConverter(mergedHashFunctionCalls, this.functionInfos);
+        return hashFunctionCallsToFunctionCallsConverter.getFunctionCalls();
     }
 }
