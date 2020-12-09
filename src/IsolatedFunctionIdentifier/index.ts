@@ -1,0 +1,1 @@
+export {IsolatedFunctionIdentifier} from './IsolatedFunctionIdentifier';

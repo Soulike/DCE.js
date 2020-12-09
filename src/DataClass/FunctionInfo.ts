@@ -61,6 +61,15 @@ export class FunctionInfo
     }
 
     /**
+     * @description 获取 global 的唯一哈希值
+     * */
+    public static getGlobalHash(): string
+    {
+        const globalCopy = new FunctionInfo(null, null, null, null, null);
+        return globalCopy.getHash();
+    }
+
+    /**
      * @description 获取本对象的唯一哈希值
      * */
     public getHash(): string
