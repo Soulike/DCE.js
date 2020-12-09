@@ -10,13 +10,13 @@ import {FunctionInfo} from '../DataClass/FunctionInfo';
 export class DynamicCallGraphBuilder implements CallGraphBuilder
 {
     private readonly directoryPath: string;
-    private readonly functionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>;
     private readonly encoding: BufferEncoding;
 
-    constructor(directoryPath: string, functionInfos: Readonly<Readonly<FunctionInfo>[]>, encoding: BufferEncoding = 'utf-8')
+    constructor(directoryPath: string, hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>, encoding: BufferEncoding = 'utf-8')
     {
         this.directoryPath = directoryPath;
-        this.functionInfos = functionInfos;
+        this.hashToFunctionInfo = hashToFunctionInfo;
         this.encoding = encoding;
     }
 
@@ -36,7 +36,7 @@ export class DynamicCallGraphBuilder implements CallGraphBuilder
             const jalangi2OutputProcessor = new Jalangi2OutputProcessor(this.directoryPath, instrumentedFilesDirectoryPath, simpleFunctionCalls);
             const processedSimpleFunctionCalls = jalangi2OutputProcessor.getProcessedSimpleFunctionCalls();
 
-            const simpleFunctionCallProcessor = new SimpleFunctionCallProcessor(processedSimpleFunctionCalls, this.functionInfos, this.encoding);
+            const simpleFunctionCallProcessor = new SimpleFunctionCallProcessor(processedSimpleFunctionCalls, this.hashToFunctionInfo, this.encoding);
             return await simpleFunctionCallProcessor.getCallGraph();
         }));
 

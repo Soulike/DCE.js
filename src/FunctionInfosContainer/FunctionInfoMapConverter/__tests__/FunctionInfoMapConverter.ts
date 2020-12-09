@@ -1,6 +1,6 @@
 import {FunctionInfoMapConverter} from '../FunctionInfoMapConverter';
-import {FunctionInfo} from '../../DataClass/FunctionInfo';
-import {ScriptFile} from '../../DataClass/ScriptFile';
+import {FunctionInfo} from '../../../DataClass/FunctionInfo';
+import {ScriptFile} from '../../../DataClass/ScriptFile';
 
 describe(FunctionInfoMapConverter, () =>
 {

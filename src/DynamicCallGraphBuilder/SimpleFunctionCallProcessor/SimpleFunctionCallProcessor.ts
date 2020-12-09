@@ -9,13 +9,13 @@ import {HashFunctionCallsToFunctionCallsConverter} from '../../HashFunctionCalls
 export class SimpleFunctionCallProcessor implements CallGraphBuilder
 {
     private readonly simpleFunctionCalls: Readonly<Readonly<SimpleFunctionCall>[]>;
-    private readonly functionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>;
     private readonly sourceCodeEncoding: BufferEncoding;
 
-    constructor(simpleFunctionCalls: Readonly<Readonly<SimpleFunctionCall>[]>, functionInfos: Readonly<Readonly<FunctionInfo>[]>, sourceCodeEncoding: BufferEncoding = 'utf-8')
+    constructor(simpleFunctionCalls: Readonly<Readonly<SimpleFunctionCall>[]>, hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>, sourceCodeEncoding: BufferEncoding = 'utf-8')
     {
         this.simpleFunctionCalls = simpleFunctionCalls;
-        this.functionInfos = functionInfos;
+        this.hashToFunctionInfo = hashToFunctionInfo;
         this.sourceCodeEncoding = sourceCodeEncoding;
     }
 
@@ -59,7 +59,7 @@ export class SimpleFunctionCallProcessor implements CallGraphBuilder
      * */
     private convertMergedHashFunctionCallsToFunctionCalls(mergedHashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>): (FunctionCall | null)[]
     {
-        const hashFunctionCallsToFunctionCallsConverter = new HashFunctionCallsToFunctionCallsConverter(mergedHashFunctionCalls, this.functionInfos);
+        const hashFunctionCallsToFunctionCallsConverter = new HashFunctionCallsToFunctionCallsConverter(mergedHashFunctionCalls, this.hashToFunctionInfo);
         return hashFunctionCallsToFunctionCallsConverter.getFunctionCalls();
     }
 }

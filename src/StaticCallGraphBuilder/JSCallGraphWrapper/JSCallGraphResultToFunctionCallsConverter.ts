@@ -1,19 +1,16 @@
 import {FunctionCall} from '../../DataClass/FunctionCall';
 import {FunctionInfo} from '../../DataClass/FunctionInfo';
 import {ScriptFile} from '../../DataClass/ScriptFile';
-import {FunctionInfoMapConverter} from '../../FunctionInfoMapConverter';
 
 export class JSCallGraphResultToFunctionCallsConverter
 {
     private readonly callGraph: any;
-    private readonly functionInfoMap: Map<string, FunctionInfo>;
+    private readonly functionInfoMap: ReadonlyMap<string, Readonly<FunctionInfo>>;
 
-    constructor(callGraph: any, functionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(callGraph: any, hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>)
     {
         this.callGraph = callGraph;
-
-        const functionInfoMapConverter = new FunctionInfoMapConverter(functionInfos);
-        this.functionInfoMap = functionInfoMapConverter.getFunctionInfoMap();
+        this.functionInfoMap = hashToFunctionInfo;
     }
 
     public getFunctionCalls(): FunctionCall[]
