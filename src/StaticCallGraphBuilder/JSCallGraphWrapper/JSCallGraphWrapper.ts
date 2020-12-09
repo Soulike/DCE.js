@@ -8,12 +8,12 @@ import {JSCallGraphResultBuilder} from './JSCallGraphResultBuilder';
 export class JSCallGraphWrapper implements CallGraphBuilder
 {
     private readonly scriptFiles: Readonly<Readonly<ScriptFile>[]>;
-    private readonly functionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>;
 
-    constructor(scriptFiles: Readonly<Readonly<ScriptFile>[]>, functionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(scriptFiles: Readonly<Readonly<ScriptFile>[]>, hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>)
     {
         this.scriptFiles = scriptFiles;
-        this.functionInfos = functionInfos;
+        this.hashToFunctionInfo = hashToFunctionInfo;
     }
 
     public async getCallGraph(): Promise<FunctionCall[]>
@@ -21,7 +21,7 @@ export class JSCallGraphWrapper implements CallGraphBuilder
         const jsCallGraphResultBuilder = new JSCallGraphResultBuilder(this.scriptFiles);
         const jsCallGraphResult = jsCallGraphResultBuilder.getJSCallGraphResult();
 
-        const converter = new JSCallGraphResultToFunctionCallsConverter(jsCallGraphResult, this.functionInfos);
+        const converter = new JSCallGraphResultToFunctionCallsConverter(jsCallGraphResult, this.hashToFunctionInfo);
         return converter.getFunctionCalls();
     }
 }

@@ -6,12 +6,12 @@ import {HashFunctionCallsToFunctionCallsConverter} from '../HashFunctionCallsToF
 
 export class FunctionCallsMerger
 {
-    private readonly functionInfos: Readonly<Readonly<FunctionInfo>[]>;
+    private readonly hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>;
     private readonly functionCalls: Readonly<Readonly<FunctionCall>[]>;
 
-    constructor(functionInfos: Readonly<Readonly<FunctionInfo>[]>, ...functionCalls: Readonly<Readonly<FunctionCall>[]>[])
+    constructor(hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>, ...functionCalls: Readonly<Readonly<FunctionCall>[]>[])
     {
-        this.functionInfos = functionInfos;
+        this.hashToFunctionInfo = hashToFunctionInfo;
         this.functionCalls = functionCalls.flat();
     }
 
@@ -58,7 +58,7 @@ export class FunctionCallsMerger
 
     private convertMergedHashFunctionCallsToFunctionCalls(mergedHashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>): (FunctionCall | null)[]
     {
-        const hashFunctionCallsToFunctionCallsConverter = new HashFunctionCallsToFunctionCallsConverter(mergedHashFunctionCalls, this.functionInfos);
+        const hashFunctionCallsToFunctionCallsConverter = new HashFunctionCallsToFunctionCallsConverter(mergedHashFunctionCalls, this.hashToFunctionInfo);
         return hashFunctionCallsToFunctionCallsConverter.getFunctionCalls();
     }
 }

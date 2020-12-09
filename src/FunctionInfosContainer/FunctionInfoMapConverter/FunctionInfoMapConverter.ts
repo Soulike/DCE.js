@@ -1,4 +1,4 @@
-import {FunctionInfo} from '../DataClass/FunctionInfo';
+import {FunctionInfo} from '../../DataClass/FunctionInfo';
 
 /**
  * @description Convert FunctionInfo[] to Map<hash, FunctionInfo>. The hash is from functionInfo.getHash()

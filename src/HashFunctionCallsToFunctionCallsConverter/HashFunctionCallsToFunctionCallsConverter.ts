@@ -1,18 +1,16 @@
 import {HashFunctionCall} from '../DataClass/HashFunctionCall';
 import {FunctionCall} from '../DataClass/FunctionCall';
 import {FunctionInfo} from '../DataClass/FunctionInfo';
-import {FunctionInfoMapConverter} from '../FunctionInfoMapConverter';
 
 export class HashFunctionCallsToFunctionCallsConverter
 {
     private readonly hashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>;
-    private readonly hashToFunctionInfo: Map<string, Readonly<FunctionInfo>>;
+    private readonly hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>;
 
-    constructor(hashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>, functionInfos: Readonly<Readonly<FunctionInfo>[]>)
+    constructor(hashFunctionCalls: Readonly<Readonly<HashFunctionCall>[]>, hashToFunctionInfo: ReadonlyMap<string, Readonly<FunctionInfo>>)
     {
         this.hashFunctionCalls = hashFunctionCalls;
-        const functionInfoMapConverter = new FunctionInfoMapConverter(functionInfos);
-        this.hashToFunctionInfo = functionInfoMapConverter.getFunctionInfoMap();
+        this.hashToFunctionInfo = hashToFunctionInfo;
     }
 
     public getFunctionCalls(): (FunctionCall | null)[]
