@@ -33,7 +33,7 @@
 ```ts
 class ScriptFile
 {
-    filePath: string,         // 文件的绝对路径，包含文件名
+    filePath: string;         // 文件的绝对路径，包含文件名
 }
 ```
 
@@ -56,11 +56,11 @@ class ScriptFile
 ```ts
 class FunctionInfo
 {
-    scriptFile: Readonly<ScriptFile> | null,  // 方法所在文件，当描述 global 时值为 null
-    startIndex: number | null,                // 函数代码开始的字符位置，当描述 global 时值为 null
-    endIndex: number | null,                  // 函数代码结束的字符位置（不含），当描述 global 时值为 null
-    bodyStartIndex: number | null,            // 方法函数体开始的字符位置，当描述 global 时值为 null
-    bodyEndIndex: number | null,              // 方法函数体结束的字符位置（不含），当描述 global 时值为 null
+    scriptFile: Readonly<ScriptFile> | null;  // 方法所在文件，当描述 global 时值为 null
+    startIndex: number | null;                // 函数代码开始的字符位置，当描述 global 时值为 null
+    endIndex: number | null;                  // 函数代码结束的字符位置（不含），当描述 global 时值为 null
+    bodyStartIndex: number | null;            // 方法函数体开始的字符位置，当描述 global 时值为 null
+    bodyEndIndex: number | null;              // 方法函数体结束的字符位置（不含），当描述 global 时值为 null
 }
 ```
 
@@ -74,8 +74,8 @@ class FunctionInfo
 ```ts
 class FunctionCall
 {
-    caller: FunctionInfo,
-    callee: FunctionInfo[],
+    caller: FunctionInfo;
+    callee: FunctionInfo[];
 }
 ```
 
@@ -91,9 +91,9 @@ class FunctionCall
 - 输出：合并过的 `FunctionCall[]`
 - 备注：无
 
-### 8. 孤立结点识别
+### 8. [孤立结点识别](./IsolatedFunctionIdentifier.md)
 
-- 输入：`FunctionCall` 实例，这个实例代表 `global`
+- 输入：`FunctionCall[]`，其中包含所有调用关系；`FunctionInfo[]`，其中包含所有函数信息
 - 输出：`FunctionInfo[]`，其中包含所有孤立结点
 - 备注：
   - 孤立结点指从 `global` 不可达的结点
