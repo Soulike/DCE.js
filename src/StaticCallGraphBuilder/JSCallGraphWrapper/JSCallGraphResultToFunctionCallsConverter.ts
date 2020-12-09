@@ -56,9 +56,7 @@ export class JSCallGraphResultToFunctionCallsConverter
         }
         else    // global
         {
-            return this.getFunctionInfoFromFunctionInfoMap({
-                scriptFile: null, startIndex: null, endIndex: null,
-            });
+            return this.getFunctionInfoFromFunctionInfoMap(FunctionInfo.GLOBAL);
         }
     }
 
