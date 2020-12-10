@@ -24,15 +24,15 @@ export class SimpleFunctionCallsToSingleHashFunctionCallsConverter
     public async getSingleHashFunctionCalls(): Promise<SingleHashFunctionCall[]>
     {
         const {simpleFunctionCalls} = this;
-        return await Promise.all(simpleFunctionCalls.map(
-            async ({caller, callee}) =>
-            {
-                const [callerHash, calleeHash] = await Promise.all([
-                    this.convertPartialFunctionInfoToHash(caller),
-                    this.convertPartialFunctionInfoToHash(callee),
-                ]);
-                return new SingleHashFunctionCall(callerHash, calleeHash);
-            }));
+        const singleHashFunctionCalls: SingleHashFunctionCall[] = [];
+        // do not use Promise.all here or getFileContent() will fail to cache file content
+        for (const {caller, callee} of simpleFunctionCalls)
+        {
+            const callerHash = await this.convertPartialFunctionInfoToHash(caller);
+            const calleeHash = await this.convertPartialFunctionInfoToHash(callee);
+            singleHashFunctionCalls.push(new SingleHashFunctionCall(callerHash, calleeHash));
+        }
+        return singleHashFunctionCalls;
     }
 
     private async convertPartialFunctionInfoToHash(partialFunctionInfo: Readonly<PartialFunctionInfo>): Promise<string>
@@ -42,10 +42,8 @@ export class SimpleFunctionCallsToSingleHashFunctionCallsConverter
         {
             const fileContent = await this.getFileContent(scriptFilePath);
             const rowColumnToIndexConverter = new CodeRowColumnToIndexConverter(fileContent);
-            const [startIndex, endIndex] = await Promise.all([
-                rowColumnToIndexConverter.getIndex(startRowNumber, startColumnNumber),
-                rowColumnToIndexConverter.getIndex(endRowNumber, endColumnNumber),
-            ]);
+            const startIndex = rowColumnToIndexConverter.getIndex(startRowNumber, startColumnNumber);
+            const endIndex = rowColumnToIndexConverter.getIndex(endRowNumber, endColumnNumber);
             return FunctionInfo.getHash({
                 scriptFile: new ScriptFile(scriptFilePath),
                 startIndex, endIndex,
@@ -53,9 +51,7 @@ export class SimpleFunctionCallsToSingleHashFunctionCallsConverter
         }
         else    // global
         {
-            return FunctionInfo.getHash({
-                scriptFile: null, startIndex: null, endIndex: null,
-            });
+            return FunctionInfo.getHash(FunctionInfo.GLOBAL);
         }
     }
 
