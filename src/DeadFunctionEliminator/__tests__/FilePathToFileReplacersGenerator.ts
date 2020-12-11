@@ -35,4 +35,24 @@ describe(FilePathToFileReplacersGenerator, () =>
             c: [new ReplaceInfo(new Range(100, 256), `1${' '.repeat(256 - 100 - 1)}`)],
         });
     });
+
+    it('should handle empty function', function ()
+    {
+        const functionInfos = [
+            new FunctionInfo(new ScriptFile('a'), 1, 90, 45, 89),
+            new FunctionInfo(new ScriptFile('a'), 1, 2, 1, 1),
+        ];
+        const generator = new FilePathToFileReplacersGenerator(functionInfos);
+        const map = generator.getFilePathToReplaceInfos();
+        const obj: { [key: string]: ReplaceInfo[] } = {};
+        map.forEach((replaceInfo, filePath) =>
+        {
+            obj[filePath] = replaceInfo;
+        });
+        expect(obj).toEqual({
+            a: [
+                new ReplaceInfo(new Range(45, 89), `1${' '.repeat(89 - 45 - 1)}`),
+            ],
+        });
+    });
 });

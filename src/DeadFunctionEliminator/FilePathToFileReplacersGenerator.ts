@@ -10,10 +10,17 @@ export class FilePathToFileReplacersGenerator
         this.functionInfos = functionInfos;
     }
 
-    private static getReplaceInfoFromIndexes(startIndex: number, endIndex: number): ReplaceInfo
+    private static getReplaceInfoFromIndexes(startIndex: number, endIndex: number): ReplaceInfo | null
     {
         const bodyLength = endIndex - startIndex;
-        return new ReplaceInfo(new Range(startIndex, endIndex), `1${' '.repeat(bodyLength - 1)}`);
+        if (bodyLength <= 1)
+        {
+            return null;
+        }
+        else
+        {
+            return new ReplaceInfo(new Range(startIndex, endIndex), `1${' '.repeat(bodyLength - 1)}`);
+        }
     }
 
     public getFilePathToReplaceInfos(): Map<string, ReplaceInfo[]>
@@ -26,15 +33,19 @@ export class FilePathToFileReplacersGenerator
                 throw new Error('try to modify "global"');
             }
             const replaceInfo = FilePathToFileReplacersGenerator.getReplaceInfoFromIndexes(bodyStartIndex, bodyEndIndex);
-            const {filePath} = scriptFile;
-            const replaceInfos = filePathToReplaceInfos.get(filePath);
-            if (replaceInfos === undefined)
+            if (replaceInfo !== null)
             {
-                filePathToReplaceInfos.set(filePath, [replaceInfo]);
-            }
-            else
-            {
-                replaceInfos.push(replaceInfo);
+                const {filePath} = scriptFile;
+                const replaceInfos = filePathToReplaceInfos.get(filePath);
+                if (replaceInfos === undefined)
+                {
+                    filePathToReplaceInfos.set(filePath, [replaceInfo]);
+                }
+                else
+                {
+                    // TODO: prevent overlap
+                    replaceInfos.push(replaceInfo);
+                }
             }
         });
         return filePathToReplaceInfos;
