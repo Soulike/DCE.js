@@ -1,9 +1,8 @@
 import {JavaScriptProcessor} from '../Interface/JavaScriptProcessor';
 import * as ESTree from 'estree';
-import {ReplaceInfo} from '../Class/ReplaceInfo';
+import {Range, ReplaceInfo} from '../../Replacer';
 import * as esprima from 'esprima';
 import {throwRangeIsUndefinedException} from '../../Function/Throw';
-import {Range} from '../Class/Range';
 import cryptoRandomString from 'crypto-random-string';
 
 export class FunctionConstructionProcessor implements JavaScriptProcessor

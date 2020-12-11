@@ -1,4 +1,4 @@
-import {ReplaceInfo} from '../Class/ReplaceInfo';
+import {ReplaceInfo} from './Class/ReplaceInfo';
 
 export class StringReplacer
 {
