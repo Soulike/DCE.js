@@ -1,6 +1,6 @@
 import {StringReplacer} from '../StringReplacer';
-import {ReplaceInfo} from '../../Class/ReplaceInfo';
-import {Range} from '../../Class/Range';
+import {ReplaceInfo} from '../Class/ReplaceInfo';
+import {Range} from '../Class/Range';
 
 describe(StringReplacer, () =>
 {

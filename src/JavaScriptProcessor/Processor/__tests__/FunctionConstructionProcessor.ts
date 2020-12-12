@@ -1,5 +1,5 @@
 import {FunctionConstructionProcessor} from '../FunctionConstructionProcessor';
-import {Range} from '../../Class/Range';
+import {Range} from '../../../Replacer';
 
 describe(FunctionConstructionProcessor, () =>
 {

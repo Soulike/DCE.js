@@ -1,9 +1,8 @@
 import {JavaScriptProcessor} from '../Interface/JavaScriptProcessor';
 import * as ESTree from 'estree';
-import {ReplaceInfo} from '../Class/ReplaceInfo';
+import {Range, ReplaceInfo} from '../../Replacer';
 import {throwRangeIsUndefinedException} from '../../Function/Throw';
 import * as esprima from 'esprima';
-import {Range} from '../Class/Range';
 
 export class EvalProcessor implements JavaScriptProcessor
 {

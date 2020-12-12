@@ -1,6 +1,5 @@
 import {EvalProcessor} from '../EvalProcessor';
-import {ReplaceInfo} from '../../Class/ReplaceInfo';
-import {Range} from '../../Class/Range';
+import {Range, ReplaceInfo} from '../../../Replacer';
 
 describe(EvalProcessor, () =>
 {

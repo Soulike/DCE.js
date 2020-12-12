@@ -1,11 +1,10 @@
 import {ScriptFile} from '../DataClass/ScriptFile';
-import {ReplaceInfo} from './Class/ReplaceInfo';
+import {FileReplacer, ReplaceInfo} from '../Replacer';
 import {EsprimaForFile} from '../EsprimaWrapper';
 import {ASTNodeFilter} from './ASTNodeFilter';
 import * as esprima from 'esprima';
 import {FunctionConstructionProcessor} from './Processor/FunctionConstructionProcessor';
 import {EvalProcessor} from './Processor/EvalProcessor';
-import {FileReplacer} from './Replacer/FileReplacer';
 
 export class JavaScriptProcessor
 {
