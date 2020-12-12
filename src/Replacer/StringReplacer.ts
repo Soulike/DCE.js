@@ -44,38 +44,43 @@ export class StringReplacer
      * */
     private processReplaceInfos(): ReplaceInfo[]
     {
-        const {replaceInfos} = this;
-        const processedReplaceInfos: ReplaceInfo[] = [];
-        replaceInfos.forEach(replaceInfo =>
-        {
-            let foundPlace = false;
-            for (let i = 0; i < processedReplaceInfos.length; i++)
-            {
-                const {range: {startIndex, endIndex}} = processedReplaceInfos[i];
-                const {range: {startIndex: currentStartIndex, endIndex: currentEndIndex}} = replaceInfo;
+        let replaceInfos: Readonly<ReplaceInfo>[] = [];
+        let processedReplaceInfos = [...this.replaceInfos];
 
-                if (startIndex <= currentStartIndex && endIndex >= currentEndIndex)  // included
-                {
-                    foundPlace = true;
-                    break;
-                }
-                else if (startIndex >= currentStartIndex && endIndex <= currentEndIndex) // including
-                {
-                    processedReplaceInfos[i] = replaceInfo;
-                    foundPlace = true;
-                    break;
-                }
-                else if (StringReplacer.inRange(currentStartIndex, startIndex, endIndex) && currentEndIndex > endIndex
-                    || StringReplacer.inRange(currentEndIndex, startIndex, endIndex) && currentStartIndex < startIndex)
-                {
-                    throw new Error('ranges should not overlap');
-                }
-            }
-            if (!foundPlace)
+        while (replaceInfos.length !== processedReplaceInfos.length)
+        {
+            replaceInfos = processedReplaceInfos;
+            processedReplaceInfos = [];
+            replaceInfos.forEach(replaceInfo =>
             {
-                processedReplaceInfos.push(replaceInfo);
-            }
-        });
+                let foundPlace = false;
+                const {range: {startIndex: currentStartIndex, endIndex: currentEndIndex}} = replaceInfo;
+                for (let i = 0; i < processedReplaceInfos.length; i++)
+                {
+                    const {range: {startIndex, endIndex}} = processedReplaceInfos[i];
+                    if (startIndex <= currentStartIndex && endIndex >= currentEndIndex)  // included
+                    {
+                        foundPlace = true;
+                        break;
+                    }
+                    else if (startIndex >= currentStartIndex && endIndex <= currentEndIndex) // including
+                    {
+                        processedReplaceInfos[i] = replaceInfo;
+                        foundPlace = true;
+                        break;
+                    }
+                    else if (StringReplacer.inRange(currentStartIndex, startIndex, endIndex) && currentEndIndex > endIndex
+                        || StringReplacer.inRange(currentEndIndex, startIndex, endIndex) && currentStartIndex < startIndex)
+                    {
+                        throw new Error('ranges should not overlap');
+                    }
+                }
+                if (!foundPlace)
+                {
+                    processedReplaceInfos.push(replaceInfo);
+                }
+            });
+        }
         return processedReplaceInfos.sort((a, b) => a.range.startIndex - b.range.startIndex);
     }
 }
