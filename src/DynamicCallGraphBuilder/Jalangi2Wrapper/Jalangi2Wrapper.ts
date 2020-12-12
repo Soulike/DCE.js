@@ -6,7 +6,7 @@ export class Jalangi2Wrapper
 {
     // all paths of jalangi2 analysis
     private static readonly ANALYSIS_PATHS: Readonly<string[]> = [
-        path.join(__dirname, 'CallAnalysis.js'),
+        path.join(__dirname, 'LogCallAnalysis.js'),
     ];
 
     private readonly directoryPath: string;
