@@ -19,7 +19,7 @@ export class FilePathToFileReplacersGenerator
         }
         else
         {
-            return new ReplaceInfo(new Range(startIndex, endIndex), `1${' '.repeat(bodyLength - 1)}`);
+            return new ReplaceInfo(new Range(startIndex, endIndex), `1`);
         }
     }
 

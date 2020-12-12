@@ -28,11 +28,11 @@ describe(FilePathToFileReplacersGenerator, () =>
         });
         expect(obj).toEqual({
             a: [
-                new ReplaceInfo(new Range(45, 89), `1${' '.repeat(89 - 45 - 1)}`),
-                new ReplaceInfo(new Range(78, 96), `1${' '.repeat(96 - 78 - 1)}`),
+                new ReplaceInfo(new Range(45, 89), `1`),
+                new ReplaceInfo(new Range(78, 96), `1`),
             ],
-            b: [new ReplaceInfo(new Range(5, 20), `1${' '.repeat(20 - 5 - 1)}`)],
-            c: [new ReplaceInfo(new Range(100, 256), `1${' '.repeat(256 - 100 - 1)}`)],
+            b: [new ReplaceInfo(new Range(5, 20), `1`)],
+            c: [new ReplaceInfo(new Range(100, 256), `1`)],
         });
     });
 
@@ -51,7 +51,7 @@ describe(FilePathToFileReplacersGenerator, () =>
         });
         expect(obj).toEqual({
             a: [
-                new ReplaceInfo(new Range(45, 89), `1${' '.repeat(89 - 45 - 1)}`),
+                new ReplaceInfo(new Range(45, 89), `1`),
             ],
         });
     });
