@@ -4,23 +4,30 @@ function CallAnalysis()
      * @type SimpleFunctionCall[]
      * */
     const simpleFunctionCalls = [];
-    let functionIIDStack = [null];  // null for global
+    /**
+     * @type (null|{iid: any, sid: any})[]
+     * */
+    let functionStack = [null];  // null for global
 
     this.functionEnter = function (iid, _f, _dis, _args)
     {
-        functionIIDStack.push(iid);
+        functionStack.push({
+            iid,
+            sid: J$.sid,
+        });
     };
 
     this.functionExit = function (_iid, _returnVal, _wrappedExceptionVal)
     {
-        functionIIDStack.pop();
+        functionStack.pop();
     };
 
     this.invokeFunPre = function (iid, f, base, args, isConstructor, isMethod, functionIid, functionSid)
     {
         if (functionSid !== undefined && functionIid !== undefined)  // undefined if it's native method
         {
-            const sourcePartialFunctionInfo = getSourcePartialFunctionInfo(functionIIDStack[functionIIDStack.length - 1]);
+            const iidAndSid = functionStack[functionStack.length - 1];
+            const sourcePartialFunctionInfo = getSourcePartialFunctionInfo(iidAndSid);
             const targetPartialFunctionInfo = getTargetSimpleFunctionCall(functionIid, functionSid);
             simpleFunctionCalls.push({
                 caller: sourcePartialFunctionInfo,
@@ -37,11 +44,9 @@ function CallAnalysis()
     /**
      * @returns PartialFunctionInfo
      * */
-    function getSourcePartialFunctionInfo(iid)
+    function getSourcePartialFunctionInfo(iidAndSId)
     {
-        const iids = J$.smap[J$.sid];
-        const {originalCodeFileName} = iids;
-        if (iid === null)    // global
+        if (iidAndSId === null)    // global
         {
             return {
                 scriptFilePath: null,
@@ -53,6 +58,12 @@ function CallAnalysis()
         }
         else
         {
+            const {
+                iid,
+                sid,
+            } = iidAndSId;
+            const iids = J$.smap[sid];
+            const {originalCodeFileName} = iids;
             const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[iid];
             return {
                 scriptFilePath: originalCodeFileName,
