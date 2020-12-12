@@ -43,7 +43,6 @@ export class FilePathToFileReplacersGenerator
                 }
                 else
                 {
-                    // TODO: prevent overlap
                     replaceInfos.push(replaceInfo);
                 }
             }
