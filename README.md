@@ -4,13 +4,37 @@
 
 JavaScript 应用程序死代码消除工具。
 
+## 使用方法
+
+### 1. 安装依赖
+
+确保安装 Node.js 及 yarn 的最新版本，在项目文件夹下运行 `yarn` 安装所有依赖。
+
+### 2. 编译
+
+执行 `yarn build`
+
+### 3. 运行
+
+在项目文件夹下运行：
+
+```sh
+node dist/index.js [options...] <directory>
+```
+
+- `--info-only` 只在 stdout 输出寻找到的死代码函数信息，不对原始文件做出修改
+- `-d <directory>` 将处理后结果输出到指定目录下。不设定该选项将直接对原始文件做出修改
+- `--help` 输出帮助信息
+
 ## 项目进度
 
 - 2020.11.04 确定项目主题[1]
-- 2020.11.06 确定项目静态分析工具为 [ACG.js](https://github.com/snyk-labs/javascript-call-graph) 搭配 [TAJS](https://github.com/cs-au-dk/TAJS)[2]
+- 2020.11.06 确定项目静态分析工具为 [ACG.js](https://github.com/snyk-labs/javascript-call-graph)
+  搭配 [TAJS](https://github.com/cs-au-dk/TAJS)[2]
 - 2020.11.09 完成项目概览（[Overview.md](./doc/Overview.md)）
 - 2020.11.09 对静态分析工具进行评估，放弃 TAJS（对目前 Web 应用支持欠佳）
-- 2020.11.17 修改项目概览（[Overview.md](./doc/Overview.md)）；完成 `HTMLProcessor` 模块和 `ScriptFileScanner` 模块；放弃 ACG.js，决定基于 [esprima](https://github.com/jquery/esprima) 来进行静态调用分析
+- 2020.11.17 修改项目概览（[Overview.md](./doc/Overview.md)）；完成 `HTMLProcessor` 模块和 `ScriptFileScanner` 模块；放弃
+  ACG.js，决定基于 [esprima](https://github.com/jquery/esprima) 来进行静态调用分析
 
 ## 参考文献
 
