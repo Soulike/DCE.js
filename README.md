@@ -29,12 +29,10 @@ node dist/index.js [options...] <directory>
 ## 项目进度
 
 - 2020.11.04 确定项目主题[1]
-- 2020.11.06 确定项目静态分析工具为 [ACG.js](https://github.com/snyk-labs/javascript-call-graph)
-  搭配 [TAJS](https://github.com/cs-au-dk/TAJS)[2]
+- 2020.11.06 确定项目静态分析工具为 [ACG.js](https://github.com/snyk-labs/javascript-call-graph) 搭配 [TAJS](https://github.com/cs-au-dk/TAJS)[2]
 - 2020.11.09 完成项目概览（[Overview.md](./doc/Overview.md)）
 - 2020.11.09 对静态分析工具进行评估，放弃 TAJS（对目前 Web 应用支持欠佳）
-- 2020.11.17 修改项目概览（[Overview.md](./doc/Overview.md)）；完成 `HTMLProcessor` 模块和 `ScriptFileScanner` 模块；放弃
-  ACG.js，决定基于 [esprima](https://github.com/jquery/esprima) 来进行静态调用分析
+- 2020.11.17 修改项目概览（[Overview.md](./doc/Overview.md)）；完成 `HTMLProcessor` 模块和 `ScriptFileScanner` 模块；放弃 ACG.js，决定基于 [esprima](https://github.com/jquery/esprima) 来进行静态调用分析
 
 ## 参考文献
 
