@@ -18,13 +18,32 @@ export class JSCallGraphResultToFunctionCallsConverter
         const callerFunctionInfoHashToFunctionCall = new Map<string, FunctionCall>();
         this.callGraph.edges.iter((caller: any, callee: any) =>
         {
-            if (callee.type === 'NativeVertex')  // ignore native function calls
+            // 'callee' node has type NativeVertex and is a function that accepts a function as one of its arguments.
+            if (callee.type === 'NativeVertex')
             {
-                return;
+                const args = caller.call.arguments;
+                args.forEach((arg: any) =>
+                {
+                    if (arg.type === 'FunctionExpression' || arg.types === 'ArrowFunctionExpression')
+                    {
+                        const callerFunctionInfo = this.getCallerFunctionInfo(caller);
+                        const calleeFunctionInfo = this.getCalleeFunctionInfo(arg);
+                        const functionCall = callerFunctionInfoHashToFunctionCall.get(callerFunctionInfo.getHash());
+                        if (functionCall === undefined)
+                        {
+                            callerFunctionInfoHashToFunctionCall.set(
+                                callerFunctionInfo.getHash(),
+                                new FunctionCall(callerFunctionInfo, [calleeFunctionInfo]));
+                        }
+                        else
+                        {
+                            functionCall.callee.push(calleeFunctionInfo);
+                        }
+                    }
+                });
             }
             const callerFunctionInfo = this.getCallerFunctionInfo(caller);
             const calleeFunctionInfo = this.getCalleeFunctionInfo(callee);
-
             const functionCall = callerFunctionInfoHashToFunctionCall.get(callerFunctionInfo.getHash());
             if (functionCall === undefined)
             {
