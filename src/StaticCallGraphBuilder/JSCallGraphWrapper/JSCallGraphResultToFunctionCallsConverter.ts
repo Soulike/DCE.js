@@ -27,7 +27,7 @@ export class JSCallGraphResultToFunctionCallsConverter
                     if (arg.type === 'FunctionExpression' || arg.types === 'ArrowFunctionExpression')
                     {
                         const callerFunctionInfo = this.getCallerFunctionInfo(caller);
-                        const calleeFunctionInfo = this.getCalleeFunctionInfo(arg);
+                        const calleeFunctionInfo = this.getCalleeFunctionInfo({func: arg});
                         const functionCall = callerFunctionInfoHashToFunctionCall.get(callerFunctionInfo.getHash());
                         if (functionCall === undefined)
                         {
