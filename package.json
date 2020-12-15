@@ -1,6 +1,6 @@
 {
   "name": "dce.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "JavaScript dead code eliminator.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
