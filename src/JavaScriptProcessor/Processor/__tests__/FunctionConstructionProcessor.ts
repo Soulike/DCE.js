@@ -151,7 +151,7 @@ describe(FunctionConstructionProcessor, () =>
         expect(functionConstructionProcessor.getReplaceInfo()).toBeNull();
     });
 
-    it('should return null if Function called without parameter', function ()
+    it('should return null if Function is called without parameter', function ()
     {
         // Function()
         const callExpression: any = {
