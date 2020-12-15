@@ -4,6 +4,7 @@ import {NodeProcessor as INodeProcessor} from './Interface/NodeProcessor';
 import * as esprima from 'esprima';
 import {FunctionDeclarationProcessor} from './NodeProcessor/FunctionDeclarationProcessor';
 import {FunctionExpressionProcessor} from './NodeProcessor/FunctionExpressionProcessor';
+import {ArrowFunctionExpressionProcessor} from './NodeProcessor/ArrowFunctionExpressionProcessor';
 
 export class NodeProcessor implements INodeProcessor
 {
@@ -30,6 +31,11 @@ export class NodeProcessor implements INodeProcessor
             case esprima.Syntax.FunctionExpression:
             {
                 const processor = new FunctionExpressionProcessor(node);
+                return processor.getPartialFunctionInfo();
+            }
+            case esprima.Syntax.ArrowFunctionExpression:
+            {
+                const processor = new ArrowFunctionExpressionProcessor(node);
                 return processor.getPartialFunctionInfo();
             }
             default:
