@@ -17,10 +17,13 @@ function LogCallAnalysis()
                 endColumnNumber: null,
             };
             const targetPartialFunctionInfo = getTargetSimpleFunctionCall(iid, J$.sid);
-            simpleFunctionCalls.push({
-                caller: sourcePartialFunctionInfo,
-                callee: targetPartialFunctionInfo,
-            });
+            if (targetPartialFunctionInfo !== null)
+            {
+                simpleFunctionCalls.push({
+                    caller: sourcePartialFunctionInfo,
+                    callee: targetPartialFunctionInfo,
+                });
+            }
         }
     };
 
@@ -30,12 +33,16 @@ function LogCallAnalysis()
     };
 
     /**
-     * @returns PartialFunctionInfo
+     * @returns PartialFunctionInfo | null
      * */
     function getTargetSimpleFunctionCall(functionIid, functionSid)
     {
         const iids = J$.smap[functionSid];
         const {originalCodeFileName} = iids;
+        if (originalCodeFileName === 'evalIndirect' || originalCodeFileName === 'eval')
+        {
+            return null;
+        }
         const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[functionIid];
         return {
             scriptFilePath: originalCodeFileName,

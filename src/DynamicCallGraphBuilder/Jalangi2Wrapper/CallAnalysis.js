@@ -29,10 +29,13 @@ function CallAnalysis()
             const iidAndSid = functionStack[functionStack.length - 1];
             const sourcePartialFunctionInfo = getSourcePartialFunctionInfo(iidAndSid);
             const targetPartialFunctionInfo = getTargetSimpleFunctionCall(functionIid, functionSid);
-            simpleFunctionCalls.push({
-                caller: sourcePartialFunctionInfo,
-                callee: targetPartialFunctionInfo,
-            });
+            if (sourcePartialFunctionInfo !== null && targetPartialFunctionInfo !== null)
+            {
+                simpleFunctionCalls.push({
+                    caller: sourcePartialFunctionInfo,
+                    callee: targetPartialFunctionInfo,
+                });
+            }
         }
     };
 
@@ -42,7 +45,7 @@ function CallAnalysis()
     };
 
     /**
-     * @returns PartialFunctionInfo
+     * @returns PartialFunctionInfo | null
      * */
     function getSourcePartialFunctionInfo(iidAndSId)
     {
@@ -64,6 +67,10 @@ function CallAnalysis()
             } = iidAndSId;
             const iids = J$.smap[sid];
             const {originalCodeFileName} = iids;
+            if (originalCodeFileName === 'evalIndirect' || originalCodeFileName === 'eval')
+            {
+                return null;
+            }
             const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[iid];
             return {
                 scriptFilePath: originalCodeFileName,
@@ -76,12 +83,16 @@ function CallAnalysis()
     }
 
     /**
-     * @returns PartialFunctionInfo
+     * @returns PartialFunctionInfo | null
      * */
     function getTargetSimpleFunctionCall(functionIid, functionSid)
     {
         const iids = J$.smap[functionSid];
         const {originalCodeFileName} = iids;
+        if (originalCodeFileName === 'evalIndirect' || originalCodeFileName === 'eval')
+        {
+            return null;
+        }
         const [beginLineNumber, beginColumnNumber, endLineNumber, endColumnNumber] = iids[functionIid];
         return {
             scriptFilePath: originalCodeFileName,
