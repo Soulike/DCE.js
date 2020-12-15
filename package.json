@@ -12,11 +12,12 @@
     "prebuild": "rm -rf dist/",
     "build": "tsc",
     "watch": "tsc --watch",
-    "prestart": "yarn build",
+    "prestart": "tsc",
     "start": "node dist/index.js",
     "test": "jest",
     "test-coverage": "jest --collectCoverage",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "postinstall": "tsc"
   },
   "dependencies": {
     "@persper/js-callgraph": "^1.3.2",
