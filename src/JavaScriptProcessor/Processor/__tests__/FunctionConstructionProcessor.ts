@@ -150,4 +150,27 @@ describe(FunctionConstructionProcessor, () =>
         const functionConstructionProcessor = new FunctionConstructionProcessor(node);
         expect(functionConstructionProcessor.getReplaceInfo()).toBeNull();
     });
+
+    it('should return null if Function is called without parameter', function ()
+    {
+        // Function()
+        const callExpression: any = {
+            'type': 'CallExpression',
+            'callee': {
+                'type': 'Identifier',
+                'name': 'Function',
+                'range': [
+                    21,
+                    29,
+                ],
+            },
+            'arguments': [],
+            'range': [
+                21,
+                60,
+            ],
+        };
+        const functionConstructionProcessor = new FunctionConstructionProcessor(callExpression);
+        expect(functionConstructionProcessor.getReplaceInfo()).toBeNull();
+    });
 });
