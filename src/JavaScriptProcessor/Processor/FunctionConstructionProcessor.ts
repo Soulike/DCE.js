@@ -46,6 +46,10 @@ export class FunctionConstructionProcessor implements JavaScriptProcessor
         {
             const {arguments: args} = this.node;
             const argLiterals: ESTree.Literal[] = [];
+            if(args.length === 0)
+            {
+                return null;
+            }
             for (const arg of args)
             {
                 if (arg.type !== esprima.Syntax.Literal || typeof arg.value !== 'string')
