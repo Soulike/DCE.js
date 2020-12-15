@@ -1,8 +1,9 @@
 {
   "name": "dce.js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "JavaScript dead code eliminator.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:Soulike/DCE.js.git",
   "author": "Soulike <soulike@qq.com>",
   "license": "GPLv3",

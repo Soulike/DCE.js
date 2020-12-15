@@ -19,7 +19,7 @@ JavaScript 应用程序死代码消除工具。
 在项目文件夹下运行：
 
 ```sh
-node dist/index.js [options...] <directory>
+node dist/DCE.js [options...] <directory>
 ```
 
 - `--info-only` 只在 stdout 输出寻找到的死代码函数信息，不对原始文件做出修改
