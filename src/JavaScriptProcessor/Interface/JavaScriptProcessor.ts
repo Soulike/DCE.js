@@ -1,4 +1,4 @@
-import {ReplaceInfo} from '../Class/ReplaceInfo';
+import {ReplaceInfo} from '../../Replacer';
 
 export interface JavaScriptProcessor
 {

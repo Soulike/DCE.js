@@ -1,5 +1,5 @@
-import {ScriptFile} from '../../DataClass/ScriptFile';
-import {ReplaceInfo} from '../Class/ReplaceInfo';
+import {ScriptFile} from '../DataClass/ScriptFile';
+import {ReplaceInfo} from './Class/ReplaceInfo';
 import fse from 'fs-extra';
 import {StringReplacer} from './StringReplacer';
 

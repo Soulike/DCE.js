@@ -1,8 +1,9 @@
 {
   "name": "dce.js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "JavaScript dead code eliminator.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:Soulike/DCE.js.git",
   "author": "Soulike <soulike@qq.com>",
   "license": "GPLv3",
@@ -25,6 +26,7 @@
     "@types/fs-extra": "^9.0.4",
     "@types/jsdom": "^16.2.5",
     "@types/klaw": "^3.0.1",
+    "@types/minimist": "^1.2.1",
     "@types/node": "^14.14.6",
     "@types/puppeteer": "^5.4.0",
     "core-js": "^3.7.0",
@@ -35,6 +37,7 @@
     "jalangi2": "^0.2.6",
     "jsdom": "^16.4.0",
     "klaw": "^3.0.0",
+    "minimist": "^1.2.5",
     "puppeteer": "^5.5.0",
     "typescript": "^4.0.5"
   },
