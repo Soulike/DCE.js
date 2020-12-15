@@ -3,6 +3,7 @@ import {ScriptFile} from '../DataClass/ScriptFile';
 import fse from 'fs-extra';
 import {EsprimaForCode} from './EsprimaForCode';
 import {ASTNodeFilter} from './Interface/ASTNodeFilter';
+import * as ESTree from 'estree';
 
 export class EsprimaForFile implements EsprimaWrapper
 {
@@ -17,7 +18,7 @@ export class EsprimaForFile implements EsprimaWrapper
         this.encoding = encoding;
     }
 
-    public async getNodes()
+    public async getNodes(): Promise<ESTree.Node[]>
     {
         const code = await fse.promises.readFile(this.scriptFile.filePath, this.encoding);
         try
