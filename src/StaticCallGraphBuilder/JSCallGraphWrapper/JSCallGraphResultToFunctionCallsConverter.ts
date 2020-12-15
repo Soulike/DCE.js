@@ -42,18 +42,21 @@ export class JSCallGraphResultToFunctionCallsConverter
                     }
                 });
             }
-            const callerFunctionInfo = this.getCallerFunctionInfo(caller);
-            const calleeFunctionInfo = this.getCalleeFunctionInfo(callee);
-            const functionCall = callerFunctionInfoHashToFunctionCall.get(callerFunctionInfo.getHash());
-            if (functionCall === undefined)
-            {
-                callerFunctionInfoHashToFunctionCall.set(
-                    callerFunctionInfo.getHash(),
-                    new FunctionCall(callerFunctionInfo, [calleeFunctionInfo]));
-            }
             else
             {
-                functionCall.callee.push(calleeFunctionInfo);
+                const callerFunctionInfo = this.getCallerFunctionInfo(caller);
+                const calleeFunctionInfo = this.getCalleeFunctionInfo(callee);
+                const functionCall = callerFunctionInfoHashToFunctionCall.get(callerFunctionInfo.getHash());
+                if (functionCall === undefined)
+                {
+                    callerFunctionInfoHashToFunctionCall.set(
+                        callerFunctionInfo.getHash(),
+                        new FunctionCall(callerFunctionInfo, [calleeFunctionInfo]));
+                }
+                else
+                {
+                    functionCall.callee.push(calleeFunctionInfo);
+                }
             }
         });
         return Array.from(callerFunctionInfoHashToFunctionCall.values());
